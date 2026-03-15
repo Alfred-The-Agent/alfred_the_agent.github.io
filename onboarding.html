@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alfred — IR Agent Setup</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #080a0f;
+  --ink-soft: #12161f;
+  --ink-mid: #1c2130;
+  --gold: #c9a84c;
+  --gold-light: #e0be7a;
+  --gold-pale: rgba(201,168,76,0.08);
+  --gold-border: rgba(201,168,76,0.2);
+  --text: rgba(255,255,255,0.85);
+  --text-mid: rgba(255,255,255,0.5);
+  --text-soft: rgba(255,255,255,0.25);
+  --border: rgba(255,255,255,0.07);
+  --success: #2a7a4e;
+  --success-light: #6db87a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── TOP NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8,10,15,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--gold-border);
+  padding: 0 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-logo {
+  width: 34px; height: 34px;
+  background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--ink);
+}
+
+.nav-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nav-badge {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--gold-pale);
+  border: 1px solid var(--gold-border);
+  padding: 3px 10px;
+}
+
+.nav-steps {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.step-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.step-dot.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-pale);
+}
+.step-dot.done {
+  border-color: var(--success-light);
+  color: var(--success-light);
+  background: rgba(109,184,122,0.08);
+}
+.step-line { width: 24px; height: 1px; background: var(--border); }
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 56px 40px 40px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1.15;
+  margin-bottom: 14px;
+  color: #fff;
+}
+.hero h1 em { font-style: italic; color: var(--gold-light); }
+.hero p {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.progress-bar-wrap {
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  margin-bottom: 40px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.4s ease;
+  width: 20%;
+}
+
+/* ── FORM LAYOUT ── */
+.form-wrapper {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
+}
+
+.form-section {
+  display: none;
+  animation: fadeUp 0.35s ease;
+}
+.form-section.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  width: 38px; height: 38px;
+  border: 1px solid var(--gold-border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.section-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.section-header p { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.field-grid.single { grid-template-columns: 1fr; }
+.field-grid.thirds { grid-template-columns: 1fr 1fr 1fr; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  font-weight: 500;
+}
+.field label span { color: var(--gold); margin-left: 2px; }
+
+.field input,
+.field select,
+.field textarea {
+  background: var(--ink-soft);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: rgba(201,168,76,0.4); }
+.field input::placeholder,
+.field textarea::placeholder { color: var(--text-soft); }
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.field select { cursor: pointer; }
+.field select option { background: var(--ink-mid); }
+
+/* Color picker row */
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.color-row input[type="color"] {
+  width: 44px; height: 38px;
+  padding: 2px;
+  cursor: pointer;
+  background: var(--ink-soft);
+  border: 1px solid var(--border);
+}
+.color-row input[type="text"] { flex: 1; }
+
+/* Metric rows */
+.metric-add-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 100px 36px;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: end;
+}
+.btn-remove-row {
+  background: rgba(139,38,53,0.15);
+  border: 1px solid rgba(139,38,53,0.25);
+  color: #d47a85;
+  cursor: pointer;
+  height: 38px;
+  width: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+.btn-remove-row:hover { background: rgba(139,38,53,0.3); }
+
+.btn-add-row {
+  background: transparent;
+  border: 1px dashed var(--gold-border);
+  color: var(--gold);
+  cursor: pointer;
+  padding: 8px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+  width: fit-content;
+  margin-top: 4px;
+}
+.btn-add-row:hover { background: var(--gold-pale); border-color: var(--gold); }
+
+/* PR section */
+.pr-entry {
+  background: var(--ink-soft);
+  border: 1px solid var(--border);
+  padding: 14px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.pr-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.pr-entry-header span { font-size: 11px; color: var(--gold); letter-spacing: 0.1em; }
+.pr-entry-header button {
+  background: none; border: none; color: var(--text-soft);
+  cursor: pointer; font-size: 14px; transition: color 0.2s;
+}
+.pr-entry-header button:hover { color: #d47a85; }
+
+/* Navigation buttons */
+.form-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-prev {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  padding: 11px 22px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.06em;
+}
+.btn-prev:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+.btn-next {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  padding: 11px 28px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-next:hover { background: var(--gold-light); }
+.btn-next:disabled { opacity: 0.4; cursor: default; }
+
+.section-hint {
+  font-size: 11px;
+  color: var(--text-soft);
+  font-style: italic;
+}
+
+/* ── PREVIEW PANEL ── */
+.preview-section {
+  display: none;
+}
+.preview-section.active { display: block; }
+
+.preview-frame {
+  background: var(--ink-soft);
+  border: 1px solid var(--gold-border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.preview-topbar {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+.preview-brand { display: flex; align-items: center; gap: 10px; }
+.preview-logo-box {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Cormorant Garamond', serif;
+  background: var(--gold);
+  color: var(--ink);
+}
+.preview-company-name { font-size: 13px; font-weight: 500; }
+.preview-ticker { font-size: 10px; color: var(--gold); letter-spacing: 0.1em; }
+.preview-stock { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: var(--gold-light); }
+
+.preview-chat-area {
+  padding: 20px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preview-msg {
+  display: flex;
+  gap: 10px;
+  animation: fadeUp 0.3s ease;
+}
+.preview-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-border);
+  background: var(--ink-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--gold-light);
+  flex-shrink: 0;
+}
+.preview-bubble {
+  background: var(--ink-mid);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--gold);
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.75);
+  max-width: 80%;
+}
+
+.preview-input-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(0,0,0,0.2);
+  border-top: 1px solid var(--border);
+}
+.preview-input {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  padding: 8px 12px;
+  pointer-events: none;
+}
+.preview-send {
+  padding: 8px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  pointer-events: none;
+  background: var(--gold);
+  color: var(--ink);
+}
+
+/* ── SUCCESS ── */
+.success-section {
+  display: none;
+  text-align: center;
+  padding: 60px 40px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.success-section.active { display: block; animation: fadeUp 0.4s ease; }
+.success-icon {
+  width: 64px; height: 64px;
+  border: 2px solid var(--success-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 24px;
+  color: var(--success-light);
+  background: rgba(109,184,122,0.08);
+}
+.success-section h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.success-section p { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 8px; }
+.next-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 28px 0;
+  text-align: left;
+}
+.next-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  background: var(--ink-soft);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--gold);
+}
+.next-step-num {
+  width: 22px; height: 22px;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.next-step-text strong { display: block; font-size: 13px; color: #fff; margin-bottom: 2px; }
+.next-step-text span { font-size: 11px; color: var(--text-soft); }
+
+.btn-launch {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  padding: 14px 36px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+.btn-launch:hover { background: var(--gold-light); }
+
+/* Dividers / hints */
+.field-hint { font-size: 10px; color: var(--text-soft); margin-top: 3px; line-height: 1.5; }
+.section-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* Color theme preview swatches */
+.swatch-row { display: flex; gap: 8px; margin-top: 6px; }
+.swatch { width: 28px; height: 28px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: transform 0.2s; }
+.swatch:hover { transform: scale(1.1); }
+.swatch-label { font-size: 10px; color: var(--text-soft); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">A</div>
+    <div>
+      <div class="nav-title">Alfred</div>
+    </div>
+    <div class="nav-badge">IR Agent Setup</div>
+  </div>
+  <div class="nav-steps">
+    <div class="step-dot active" id="sd1" onclick="goTo(1)">1</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="sd2" onclick="goTo(2)">2</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="sd3" onclick="goTo(3)">3</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="sd4" onclick="goTo(4)">4</div>
+    <div class="step-line"></div>
+    <div class="step-dot" id="sd5" onclick="goTo(5)">5</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">58th Street Digital · Alfred Platform</div>
+  <h1>Deploy your <em>IR agent</em><br>in minutes</h1>
+  <p>Fill out the form below. Alfred will be configured with your company's data, branding, and press releases — ready to handle investor inquiries 24/7.</p>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+</div>
+
+<!-- FORM -->
+<div class="form-wrapper">
+
+  <!-- STEP 1: Company Identity -->
+  <div class="form-section active" id="step1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <h2>Company Identity</h2>
+        <p>Alfred will introduce himself as your company's IR agent. Make sure everything here is accurate — this is what investors will see.</p>
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field">
+        <label>Company Name <span>*</span></label>
+        <input type="text" id="companyName" placeholder="e.g. Acme Holdings, Inc." oninput="updatePreview()">
+      </div>
+      <div class="field">
+        <label>Ticker Symbol <span>*</span></label>
+        <input type="text" id="ticker" placeholder="e.g. ACME" oninput="updatePreview()" style="text-transform:uppercase;">
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field">
+        <label>Exchange <span>*</span></label>
+        <select id="exchange" onchange="updatePreview()">
+          <option value="">Select exchange…</option>
+          <option>NYSE</option>
+          <option>NASDAQ</option>
+          <option>NYSE American</option>
+          <option>OTC Markets</option>
+          <option>TSX</option>
+          <option>LSE</option>
+          <option>Private (Pre-IPO)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Industry / Sector</label>
+        <input type="text" id="industry" placeholder="e.g. Digital Asset Infrastructure" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <div class="field-grid thirds">
+      <div class="field">
+        <label>HQ City</label>
+        <input type="text" id="hqCity" placeholder="e.g. New York, NY">
+      </div>
+      <div class="field">
+        <label>Founded</label>
+        <input type="text" id="founded" placeholder="e.g. 2011">
+      </div>
+      <div class="field">
+        <label>Employees</label>
+        <input type="text" id="employees" placeholder="e.g. 1,200">
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field">
+        <label>CEO Name</label>
+        <input type="text" id="ceoName" placeholder="e.g. Jane Smith">
+      </div>
+      <div class="field">
+        <label>CFO Name</label>
+        <input type="text" id="cfoName" placeholder="e.g. John Doe">
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="field-grid single">
+      <div class="field">
+        <label>Company Description <span>*</span></label>
+        <textarea id="companyDesc" placeholder="1–3 sentence description of what your company does. Alfred will use this to introduce your business to investors." rows="3" oninput="updatePreview()"></textarea>
+        <div class="field-hint">Keep it plain English — Alfred will refine it for investor conversations.</div>
+      </div>
+    </div>
+
+    <!-- Branding -->
+    <div class="section-divider"></div>
+    <div style="margin-bottom:12px;">
+      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-soft);margin-bottom:10px;">Brand Colors</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Primary Color</label>
+          <div class="color-row">
+            <input type="color" id="primaryColor" value="#0f2d5e" onchange="updatePreview()">
+            <input type="text" id="primaryColorHex" value="#0f2d5e" placeholder="#0f2d5e" oninput="syncColor('primary')">
+          </div>
+          <div class="swatch-row">
+            <div class="swatch" style="background:#0f2d5e" onclick="setColor('primary','#0f2d5e')" title="Navy"></div>
+            <div class="swatch" style="background:#1a1a2e" onclick="setColor('primary','#1a1a2e')" title="Midnight"></div>
+            <div class="swatch" style="background:#0a3d2b" onclick="setColor('primary','#0a3d2b')" title="Forest"></div>
+            <div class="swatch" style="background:#3d0a0a" onclick="setColor('primary','#3d0a0a')" title="Crimson"></div>
+            <div class="swatch" style="background:#1a0a3d" onclick="setColor('primary','#1a0a3d')" title="Violet"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Accent Color</label>
+          <div class="color-row">
+            <input type="color" id="accentColor" value="#c9a84c" onchange="updatePreview()">
+            <input type="text" id="accentColorHex" value="#c9a84c" placeholder="#c9a84c" oninput="syncColor('accent')">
+          </div>
+          <div class="swatch-row">
+            <div class="swatch" style="background:#c9a84c" onclick="setColor('accent','#c9a84c')" title="Gold"></div>
+            <div class="swatch" style="background:#e8e8e8" onclick="setColor('accent','#e8e8e8')" title="Silver"></div>
+            <div class="swatch" style="background:#4fc3f7" onclick="setColor('accent','#4fc3f7')" title="Sky"></div>
+            <div class="swatch" style="background:#a5d6a7" onclick="setColor('accent','#a5d6a7')" title="Mint"></div>
+            <div class="swatch" style="background:#f48fb1" onclick="setColor('accent','#f48fb1')" title="Rose"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <span class="section-hint">Step 1 of 5</span>
+      <button class="btn-next" onclick="nextStep(1)">Company Financials <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Financials -->
+  <div class="form-section" id="step2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <h2>Key Financials</h2>
+        <p>Alfred will cite these figures when investors ask about your financial performance. Add the most recent fiscal year plus any current guidance.</p>
+      </div>
+    </div>
+
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Most Recent Fiscal Year</div>
+    <div class="field-grid thirds">
+      <div class="field">
+        <label>Fiscal Year</label>
+        <input type="text" id="fy" placeholder="e.g. FY2025">
+      </div>
+      <div class="field">
+        <label>Revenue</label>
+        <input type="text" id="revenue" placeholder="e.g. $4.8B">
+      </div>
+      <div class="field">
+        <label>Revenue Growth</label>
+        <input type="text" id="revGrowth" placeholder="e.g. +12% YoY">
+      </div>
+    </div>
+
+    <div class="field-grid thirds">
+      <div class="field">
+        <label>Net Income</label>
+        <input type="text" id="netIncome" placeholder="e.g. $420M">
+      </div>
+      <div class="field">
+        <label>EBITDA</label>
+        <input type="text" id="ebitda" placeholder="e.g. $980M">
+      </div>
+      <div class="field">
+        <label>EPS (Diluted)</label>
+        <input type="text" id="eps" placeholder="e.g. $3.42">
+      </div>
+    </div>
+
+    <div class="field-grid thirds">
+      <div class="field">
+        <label>Free Cash Flow</label>
+        <input type="text" id="fcf" placeholder="e.g. $560M">
+      </div>
+      <div class="field">
+        <label>Gross Margin</label>
+        <input type="text" id="grossMargin" placeholder="e.g. 42%">
+      </div>
+      <div class="field">
+        <label>Market Cap</label>
+        <input type="text" id="marketCap" placeholder="e.g. $8.2B">
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Forward Guidance</div>
+    <div class="field-grid">
+      <div class="field">
+        <label>Revenue Guidance</label>
+        <input type="text" id="revGuidance" placeholder="e.g. $5.1–5.3B for FY2026">
+      </div>
+      <div class="field">
+        <label>EPS Guidance</label>
+        <input type="text" id="epsGuidance" placeholder="e.g. $3.60–3.80 for FY2026">
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Additional Key Metrics <span style="color:var(--text-soft);font-size:9px;letter-spacing:0;text-transform:none;">(add up to 6 company-specific KPIs)</span></div>
+
+    <div id="metricsContainer"></div>
+    <button class="btn-add-row" onclick="addMetric()">+ Add KPI</button>
+
+    <div class="section-divider"></div>
+    <div class="field-grid">
+      <div class="field">
+        <label>Dividend Yield</label>
+        <input type="text" id="divYield" placeholder="e.g. 2.1% or N/A">
+      </div>
+      <div class="field">
+        <label>Share Buyback Program</label>
+        <input type="text" id="buyback" placeholder="e.g. $500M authorized, $180M remaining">
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-prev" onclick="prevStep(2)">← Back</button>
+      <button class="btn-next" onclick="nextStep(2)">Press Releases <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Press Releases -->
+  <div class="form-section" id="step3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <h2>Press Releases & Filings</h2>
+        <p>Alfred will answer investor questions directly from these documents. Paste your most recent press releases — earnings announcements, M&A activity, product launches.</p>
+      </div>
+    </div>
+
+    <div id="prContainer"></div>
+    <button class="btn-add-row" onclick="addPR()">+ Add Press Release</button>
+
+    <div class="section-divider"></div>
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Recent SEC Filings</div>
+    <div class="field-grid single">
+      <div class="field">
+        <label>Recent Filings <span style="color:var(--text-soft);font-size:9px;letter-spacing:0;text-transform:none;">(list filing type, name, and date — one per line)</span></label>
+        <textarea id="recentFilings" placeholder="10-K — Annual Report FY2025 — Mar 15, 2026&#10;10-Q — Q4 Quarterly Report — Nov 14, 2025&#10;8-K — Q4 Earnings Release — Oct 22, 2025" rows="5"></textarea>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-prev" onclick="prevStep(3)">← Back</button>
+      <button class="btn-next" onclick="nextStep(3)">IR Calendar & Team <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- STEP 4: IR Team & Calendar -->
+  <div class="form-section" id="step4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <h2>IR Team & Calendar</h2>
+        <p>Alfred will route verified callbacks to your IR team and display upcoming events to investors.</p>
+      </div>
+    </div>
+
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">IR Team Contacts</div>
+    <div class="field-grid">
+      <div class="field">
+        <label>IR Contact Name</label>
+        <input type="text" id="irName" placeholder="e.g. Sarah Johnson">
+      </div>
+      <div class="field">
+        <label>IR Email <span>*</span></label>
+        <input type="email" id="irEmail" placeholder="e.g. ir@yourcompany.com">
+      </div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label>IR Phone</label>
+        <input type="tel" id="irPhone" placeholder="e.g. +1 (212) 555-0100">
+      </div>
+      <div class="field">
+        <label>IR Website</label>
+        <input type="url" id="irWebsite" placeholder="e.g. https://investors.yourcompany.com">
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Upcoming IR Events <span style="color:var(--text-soft);font-size:9px;letter-spacing:0;text-transform:none;">(earnings, conferences, shareholder meetings)</span></div>
+
+    <div id="eventsContainer"></div>
+    <button class="btn-add-row" onclick="addEvent()">+ Add Event</button>
+
+    <div class="section-divider"></div>
+    <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Analyst Coverage</div>
+    <div id="analystsContainer"></div>
+    <button class="btn-add-row" onclick="addAnalyst()">+ Add Analyst</button>
+
+    <div class="form-nav">
+      <button class="btn-prev" onclick="prevStep(4)">← Back</button>
+      <button class="btn-next" onclick="nextStep(4)">Preview Alfred <span>→</span></button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Preview + Submit -->
+  <div class="form-section" id="step5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <h2>Preview Your Alfred</h2>
+        <p>This is what investors will see when they interact with your Alfred agent. Review the branding and greeting, then submit to deploy.</p>
+      </div>
+    </div>
+
+    <div class="preview-frame" id="previewFrame">
+      <div class="preview-topbar">
+        <div class="preview-brand">
+          <div class="preview-logo-box" id="prev-logo">A</div>
+          <div>
+            <div class="preview-company-name" id="prev-company">Your Company Name</div>
+            <div class="preview-ticker" id="prev-ticker">EXCHANGE: TICK · Industry</div>
+          </div>
+        </div>
+        <div class="preview-stock" id="prev-stock">— · Alfred IR Agent</div>
+      </div>
+
+      <div class="preview-chat-area" id="previewChat">
+        <div class="preview-msg">
+          <div class="preview-avatar" id="prev-avatar">A</div>
+          <div class="preview-bubble" id="prev-greeting">
+            Good day, and welcome to <strong id="prev-greeting-co">Your Company</strong> Investor Relations.<br><br>
+            I'm Alfred, your dedicated IR agent. I'm briefed on your filings, financials, and public disclosures — ready to assist investors around the clock.<br><br>
+            How may I help you today?
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-input-bar">
+        <input type="text" class="preview-input" placeholder="Ask Alfred an investor question…" disabled>
+        <button class="preview-send">Ask Alfred</button>
+      </div>
+    </div>
+
+    <div class="field-grid single" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Additional Instructions for Alfred <span style="color:var(--text-soft);font-size:9px;letter-spacing:0;text-transform:none;">(optional)</span></label>
+        <textarea id="customInstructions" placeholder="Any specific topics Alfred should avoid, special compliance language to include, or particular tone guidance…" rows="3"></textarea>
+        <div class="field-hint">e.g. "Do not discuss the pending litigation" or "Always refer to the company as 'we' not 'they'."</div>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="btn-prev" onclick="prevStep(5)">← Back</button>
+      <button class="btn-next" onclick="submitForm()" style="background:#1a5c38;color:#fff;">
+        Deploy Alfred →
+      </button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-section" id="successSection">
+    <div class="success-icon">✓</div>
+    <h2>Alfred is configured.</h2>
+    <p>Your IR agent setup has been submitted to 58th Street Digital. Our team will review, refine, and deploy Alfred within <strong>1–2 business days</strong>.</p>
+    <p id="successCompanyLine" style="color:var(--gold);font-size:13px;"></p>
+
+    <div class="next-steps">
+      <div class="next-step">
+        <div class="next-step-num">1</div>
+        <div class="next-step-text">
+          <strong>Review & Refinement</strong>
+          <span>The 58th Street Digital team reviews your submission and may reach out with clarifying questions.</span>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">2</div>
+        <div class="next-step-text">
+          <strong>Alfred Goes Live</strong>
+          <span>Your agent is deployed and tested. You'll receive a private link to your Alfred IR page.</span>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">3</div>
+        <div class="next-step-text">
+          <strong>Embed or Link</strong>
+          <span>Add Alfred to your IR website, investor deck, or press release footer with a single line of code or link.</span>
+        </div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">4</div>
+        <div class="next-step-text">
+          <strong>Monthly Updates</strong>
+          <span>Resubmit after each earnings release or material announcement to keep Alfred current.</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-launch" onclick="window.location.reload()">Set Up Another Company →</button>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 1;
+let metricCount = 0;
+let prCount = 0;
+let eventCount = 0;
+let analystCount = 0;
+
+// ── Navigation ──
+function updateProgress() {
+  const pct = ((currentStep - 1) / 4) * 100;
+  document.getElementById('progressBar').style.width = Math.max(pct, 5) + '%';
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById(`sd${i}`);
+    if (i < currentStep) { dot.className = 'step-dot done'; dot.textContent = '✓'; }
+    else if (i === currentStep) { dot.className = 'step-dot active'; dot.textContent = i; }
+    else { dot.className = 'step-dot'; dot.textContent = i; }
+  }
+}
+
+function goTo(n) {
+  document.getElementById(`step${currentStep}`).classList.remove('active');
+  currentStep = n;
+  document.getElementById(`step${currentStep}`).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(from) {
+  document.getElementById(`step${from}`).classList.remove('active');
+  currentStep = from + 1;
+  if (currentStep <= 5) {
+    document.getElementById(`step${currentStep}`).classList.add('active');
+    if (currentStep === 5) updatePreviewFull();
+  }
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep(from) {
+  document.getElementById(`step${from}`).classList.remove('active');
+  currentStep = from - 1;
+  document.getElementById(`step${currentStep}`).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Color helpers ──
+function setColor(type, hex) {
+  document.getElementById(`${type}Color`).value = hex;
+  document.getElementById(`${type}ColorHex`).value = hex;
+  updatePreview();
+}
+function syncColor(type) {
+  const hex = document.getElementById(`${type}ColorHex`).value;
+  if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+    document.getElementById(`${type}Color`).value = hex;
+    updatePreview();
+  }
+}
+
+// ── Dynamic row builders ──
+function addMetric() {
+  if (metricCount >= 6) return;
+  metricCount++;
+  const id = `metric-${metricCount}`;
+  const div = document.createElement('div');
+  div.className = 'metric-add-row';
+  div.id = id;
+  div.innerHTML = `
+    <div class="field"><label>Metric Name</label><input type="text" placeholder="e.g. Assets Under Custody"></div>
+    <div class="field"><label>Value</label><input type="text" placeholder="e.g. $104B"></div>
+    <div class="field"><label>Change</label><input type="text" placeholder="e.g. +96% YoY"></div>
+    <button class="btn-remove-row" onclick="document.getElementById('${id}').remove(); metricCount--">✕</button>`;
+  document.getElementById('metricsContainer').appendChild(div);
+}
+
+function addPR() {
+  prCount++;
+  const id = `pr-${prCount}`;
+  const div = document.createElement('div');
+  div.className = 'pr-entry';
+  div.id = id;
+  div.innerHTML = `
+    <div class="pr-entry-header">
+      <span>📄 Press Release ${prCount}</span>
+      <button onclick="document.getElementById('${id}').remove()">✕ Remove</button>
+    </div>
+    <div class="field-grid">
+      <div class="field"><label>Headline</label><input type="text" placeholder="e.g. BitGo Reports Record Q4 2025 Results"></div>
+      <div class="field"><label>Date</label><input type="date"></div>
+    </div>
+    <div class="field"><label>Press Release Text</label><textarea placeholder="Paste the full text of the press release here…" rows="6"></textarea></div>`;
+  document.getElementById('prContainer').appendChild(div);
+}
+
+function addEvent() {
+  eventCount++;
+  const id = `ev-${eventCount}`;
+  const div = document.createElement('div');
+  div.className = 'metric-add-row';
+  div.id = id;
+  div.innerHTML = `
+    <div class="field"><label>Event Name</label><input type="text" placeholder="e.g. Q1 2026 Earnings"></div>
+    <div class="field"><label>Date</label><input type="date"></div>
+    <div class="field"><label>Detail</label><input type="text" placeholder="e.g. Webcast 9am ET"></div>
+    <button class="btn-remove-row" onclick="document.getElementById('${id}').remove()">✕</button>`;
+  document.getElementById('eventsContainer').appendChild(div);
+}
+
+function addAnalyst() {
+  analystCount++;
+  const id = `an-${analystCount}`;
+  const div = document.createElement('div');
+  div.className = 'metric-add-row';
+  div.id = id;
+  div.innerHTML = `
+    <div class="field"><label>Firm</label><input type="text" placeholder="e.g. Goldman Sachs"></div>
+    <div class="field"><label>Price Target</label><input type="text" placeholder="e.g. $24.00"></div>
+    <div class="field"><label>Rating</label><select><option>Buy</option><option>Overweight</option><option>Hold</option><option>Neutral</option><option>Underweight</option><option>Sell</option></select></div>
+    <button class="btn-remove-row" onclick="document.getElementById('${id}').remove()">✕</button>`;
+  document.getElementById('analystsContainer').appendChild(div);
+}
+
+// ── Live Preview ──
+function updatePreview() {
+  const name = document.getElementById('companyName').value || 'Your Company';
+  const ticker = (document.getElementById('ticker').value || 'TICK').toUpperCase();
+  const exchange = document.getElementById('exchange').value || 'Exchange';
+  const industry = document.getElementById('industry').value || 'Industry';
+  const primary = document.getElementById('primaryColor').value;
+  const accent = document.getElementById('accentColor').value;
+
+  document.getElementById('prev-company').textContent = name;
+  document.getElementById('prev-ticker').textContent = `${exchange}: ${ticker} · ${industry}`;
+  document.getElementById('prev-logo').textContent = name.charAt(0).toUpperCase() || 'A';
+  document.getElementById('prev-greeting-co').textContent = name;
+
+  const topbar = document.querySelector('.preview-topbar');
+  if (topbar) topbar.style.background = primary;
+
+  const logo = document.getElementById('prev-logo');
+  if (logo) { logo.style.background = accent; logo.style.color = '#0a0c10'; }
+
+  const sendBtn = document.querySelector('.preview-send');
+  if (sendBtn) sendBtn.style.background = accent;
+
+  document.querySelectorAll('.preview-bubble').forEach(b => {
+    b.style.borderLeftColor = accent;
+  });
+}
+
+function updatePreviewFull() {
+  updatePreview();
+  const name = document.getElementById('companyName').value || 'Your Company';
+  const desc = document.getElementById('companyDesc').value;
+  const greeting = document.getElementById('prev-greeting');
+  if (desc) {
+    greeting.innerHTML = `Good day, and welcome to <strong>${name}</strong> Investor Relations.<br><br>
+    I'm Alfred, your dedicated IR agent. ${desc.slice(0, 120)}${desc.length > 120 ? '…' : ''}<br><br>
+    How may I assist you today?`;
+  }
+}
+
+// ── Submit ──
+function submitForm() {
+  const name = document.getElementById('companyName').value.trim();
+  if (!name) { alert('Please enter a company name before deploying.'); return; }
+
+  document.getElementById('step5').classList.remove('active');
+  document.getElementById('successSection').classList.add('active');
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('successCompanyLine').textContent = `Alfred is now configured for ${name} (${(document.getElementById('ticker').value || 'N/A').toUpperCase()})`;
+
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById(`sd${i}`);
+    dot.className = 'step-dot done';
+    dot.textContent = '✓';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Init default rows ──
+window.addEventListener('DOMContentLoaded', () => {
+  addMetric();
+  addPR();
+  addEvent();
+  addAnalyst();
+  updateProgress();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>How Alfred Works — IR Agent</title>
+<style>
+
+:root { --cream:#f7f3ec; --cream-dark:#ede8de; --cream-mid:#f0ebe0; --ink:#0f1118; --ink-soft:#2a2d3a; --ink-mid:#4a4d5a; --ink-light:#8a8d9a; --gold:#b8963e; --gold-light:#d4af6a; --gold-pale:rgba(184,150,62,0.1); --gold-border:rgba(184,150,62,0.25); --navy:#0f2d5e; --white:#ffffff; --border:rgba(15,17,24,0.08); --shadow:0 2px 30px rgba(15,17,24,0.07); }
+* { margin:0; padding:0; box-sizing:border-box; } html { scroll-behavior:smooth; }
+body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--ink); overflow-x:hidden; }
+nav { position:fixed; top:0; left:0; right:0; z-index:100; background:rgba(247,243,236,0.94); backdrop-filter:blur(16px); border-bottom:1px solid rgba(255,255,255,0.08); height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 48px; }
+.nav-brand-link { display:flex; align-items:center; gap:14px; text-decoration:none; }
+.nav-avatar { width:38px; height:38px; border-radius:50%; border:1.5px solid var(--gold); overflow:hidden; }
+.nav-avatar img { width:100%; height:100%; object-fit:cover; }
+.nav-name { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500; color:#ffffff; }
+.nav-by { font-size:10px; color:var(--ink-light); letter-spacing:0.1em; text-transform:uppercase; }
+.nav-links { display:flex; align-items:center; gap:28px; }
+.nav-links a { font-size:13px; color:var(--ink-mid); text-decoration:none; letter-spacing:0.02em; transition:color 0.2s; }
+.nav-links a:hover { color:var(--gold); }
+.nav-cta { background:var(--ink) !important; color:var(--cream) !important; padding:9px 22px; font-size:12px !important; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; }
+.nav-cta:hover { background:var(--navy) !important; color:var(--gold-light) !important; }
+.nav-mobile-btn { display:none; background:none; border:none; font-size:20px; cursor:pointer; color:#ffffff; }
+.nav-mobile { display:none; position:fixed; top:64px; left:0; right:0; background:var(--cream); border-bottom:1px solid rgba(255,255,255,0.08); padding:20px 48px; flex-direction:column; gap:16px; z-index:99; }
+.nav-mobile.open { display:flex; }
+.nav-mobile a { font-size:14px; color:var(--ink-mid); text-decoration:none; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.08); }
+.page-hero { padding:120px 48px 80px; max-width:1200px; margin:0 auto; }
+.eyebrow { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.eyebrow-line { width:24px; height:1px; background:var(--gold); }
+.eyebrow span { font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); font-weight:500; }
+h1.page-title { font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:400; line-height:1.1; color:var(--ink); margin-bottom:18px; }
+h1.page-title em { font-style:italic; color:var(--gold); }
+.page-sub { font-size:16px; color:var(--ink-mid); line-height:1.75; max-width:560px; }
+.section { max-width:1200px; margin:0 auto; padding:80px 48px; }
+.section-dark { background:var(--ink); padding:80px 0; }
+.section-dark-inner { max-width:1200px; margin:0 auto; padding:0 48px; }
+h2.section-title { font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:400; line-height:1.15; color:var(--ink); margin-bottom:14px; }
+h2.section-title em { font-style:italic; color:var(--gold); }
+h2.section-title.light { color:var(--white); }
+.section-sub { font-size:15px; color:var(--ink-mid); line-height:1.7; max-width:540px; margin-bottom:48px; }
+.section-sub.light { color:rgba(255,255,255,0.5); }
+.btn-primary { background:var(--ink); color:var(--cream); border:none; padding:14px 32px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s; }
+.btn-primary:hover { background:var(--navy); color:var(--gold-light); }
+.btn-outline { background:transparent; color:var(--ink); border:1px solid var(--ink); padding:13px 28px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:all 0.2s; }
+.btn-outline:hover { background:var(--ink); color:var(--cream); }
+.btn-gold { background:var(--gold); color:var(--ink); border:none; padding:14px 32px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:background 0.2s; }
+.btn-gold:hover { background:var(--gold-light); }
+footer { background:var(--ink); padding:60px 48px 0; }
+.footer-inner { display:grid; grid-template-columns:1fr 2fr; gap:60px; padding-bottom:48px; border-bottom:1px solid rgba(255,255,255,0.07); }
+.footer-brand { display:flex; align-items:flex-start; gap:14px; }
+.footer-logo { width:36px; height:36px; background:var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; color:var(--ink); flex-shrink:0; }
+.footer-name { font-family:'Cormorant Garamond',serif; font-size:20px; color:rgba(255,255,255,0.8); }
+.footer-by { font-size:10px; color:rgba(255,255,255,0.3); letter-spacing:0.1em; text-transform:uppercase; margin-top:2px; }
+.footer-links { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+.footer-col { display:flex; flex-direction:column; gap:10px; }
+.footer-col-title { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; font-weight:500; }
+.footer-col a { font-size:13px; color:rgba(255,255,255,0.4); text-decoration:none; transition:color 0.2s; }
+.footer-col a:hover { color:rgba(255,255,255,0.8); }
+.footer-bottom { padding:20px 0; text-align:center; }
+.footer-bottom p { font-size:11px; color:rgba(255,255,255,0.2); }
+.fade-up { opacity:0; transform:translateY(18px); transition:opacity 0.6s ease,transform 0.6s ease; }
+.fade-up.visible { opacity:1; transform:translateY(0); }
+::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-thumb { background:rgba(184,150,62,0.3); }
+
+.timeline { display:flex; flex-direction:column; gap:0; position:relative; }
+.timeline::before { content:''; position:absolute; left:28px; top:0; bottom:0; width:1px; background:var(--gold-border); }
+.tl-item { display:grid; grid-template-columns:56px 1fr; gap:32px; padding:0 0 48px; position:relative; }
+.tl-num { width:56px; height:56px; border:1px solid var(--gold-border); background:var(--cream); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500; color:var(--gold); z-index:1; flex-shrink:0; }
+.tl-content h3 { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:500; color:var(--ink); margin-bottom:10px; margin-top:12px; }
+.tl-content p { font-size:14px; color:var(--ink-mid); line-height:1.75; max-width:580px; }
+.tl-content .tl-detail { background:var(--white); border:1px solid var(--border); border-left:2px solid var(--gold); padding:16px 20px; margin-top:16px; font-size:13px; color:var(--ink-mid); line-height:1.7; }
+.feature-table { width:100%; border-collapse:collapse; margin-top:48px; }
+.feature-table th { text-align:left; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.08); font-weight:500; }
+.feature-table td { padding:14px 16px; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.08); vertical-align:top; }
+.feature-table td:first-child { font-weight:500; color:#ffffff; }
+.feature-table td:not(:first-child) { color:rgba(255,255,255,0.72); }
+.feature-table tr:hover td { background:rgba(255,255,255,0.06); }
+.check { color:var(--gold); font-size:16px; }
+.faq-item { border-bottom:1px solid rgba(255,255,255,0.08); }
+.faq-q { padding:20px 0; font-size:15px; font-weight:500; cursor:pointer; display:flex; justify-content:space-between; align-items:center; color:#ffffff; }
+.faq-q::after { content:'↓'; color:var(--gold); transition:transform 0.2s; font-size:18px; }
+.faq-item.open .faq-q::after { transform:rotate(180deg); }
+.faq-a { display:block; padding:0 0 20px; font-size:14px; color:var(--ink-mid); line-height:1.75; max-width:680px; }
+.faq-a { display:block; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">
+    <a href="index.html" class="nav-brand-link">
+      <div class="nav-avatar"><img src="alfred-portrait.png" alt="Alfred"></div>
+      <div><div class="nav-name">Alfred the Agent</div><div class="nav-by">by 58th St. Digital</div></div>
+    </a>
+  </div>
+  <div class="nav-links">
+    <a href="about.html">About</a>
+    <a href="how-it-works.html">How It Works</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="blog.html">Insights</a>
+    <a href="contact.html">Contact</a>
+    <a href="alfred-bitgo-final.html" style="font-size:13px;color:#b8963e;text-decoration:none;letter-spacing:.02em;transition:color .2s;">Live Demo</a><a href="onboarding.html" class="nav-cta">Get Started</a>
+  </div>
+  <button class="nav-mobile-btn" onclick="document.getElementById('mobileNav').classList.toggle('open')">☰</button>
+  <div class="nav-mobile" id="mobileNav">
+    <a href="about.html">About</a><a href="how-it-works.html">How It Works</a>
+    <a href="pricing.html">Pricing</a><a href="blog.html">Insights</a>
+    <a href="contact.html">Contact</a><a href="onboarding.html">Get Started →</a>
+  </div>
+</nav>
+<div class="page-hero">
+  <div class="eyebrow"><div class="eyebrow-line"></div><span>Simple by design</span></div>
+  <h1 class="page-title">How Alfred <em>works.</em></h1>
+  <p class="page-sub">From onboarding to live investor conversations in 48 hours. Here's exactly what happens and how Alfred handles every type of inquiry.</p>
+</div>
+
+<section class="section">
+  <div class="eyebrow"><div class="eyebrow-line"></div><span>The process</span></div>
+  <h2 class="section-title">Four steps to <em>live.</em></h2>
+  <div class="timeline" style="margin-top:48px;">
+    <div class="tl-item">
+      <div class="tl-num">1</div>
+      <div class="tl-content">
+        <h3>You submit the onboarding brief</h3>
+        <p>Fill out our structured onboarding form with your company details, key financials, IR team contacts, upcoming events, and any press releases you want Alfred briefed on. Takes about 20 minutes.</p>
+        <div class="tl-detail">The form captures everything Alfred needs: company identity, financial data, analyst coverage, IR calendar, and press release content. You can add more at any time.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-num">2</div>
+      <div class="tl-content">
+        <h3>We research and configure Alfred</h3>
+        <p>The 58th Street Digital team reviews your submission, pulls your public filings from SEC EDGAR, verifies financial data, and trains Alfred specifically on your company. We QA every response category before delivery.</p>
+        <div class="tl-detail">This is where the white-glove service matters. We don't just load your form — we research your recent earnings calls, analyst reports, and news mentions to make Alfred genuinely knowledgeable about your company.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-num">3</div>
+      <div class="tl-content">
+        <h3>You review and approve Alfred</h3>
+        <p>Before going live, you get a private preview link to test Alfred yourself. Ask him anything. If any response needs adjustment, we fix it immediately. Most clients approve within a few hours.</p>
+        <div class="tl-detail">We run Alfred through our standard QA checklist: financial accuracy, escalation triggers, sentiment detection, callback routing, and compliance language review.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-num">4</div>
+      <div class="tl-content">
+        <h3>Alfred goes live on your IR page</h3>
+        <p>You receive a branded Alfred page at your custom URL. Embed it on your IR website, link it from press releases, or share it directly with investors. Alfred is on duty from that moment forward.</p>
+        <div class="tl-detail">Each time you release material news — earnings, M&A, product launches — send us the press release and we update Alfred within a few hours so he's ready before investors start asking.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-dark">
+  <div class="section-dark-inner">
+    <div class="eyebrow"><div class="eyebrow-line" style="background:var(--gold-light)"></div><span style="color:var(--gold-light)">What Alfred handles</span></div>
+    <h2 class="section-title light">Every type of <em>investor inquiry.</em></h2>
+    <table class="feature-table">
+      <thead><tr><th>Inquiry Type</th><th>Alfred's Capability</th><th>Escalation</th></tr></thead>
+      <tbody>
+        <tr><td>Stock price & trading data</td><td>Answers with current price, 52w range, volume, market cap</td><td>Never — fully automated</td></tr>
+        <tr><td>Financial results questions</td><td>Revenue, EPS, margins, guidance — cited from public filings</td><td>Never — fully automated</td></tr>
+        <tr><td>Press release Q&A</td><td>Answers detailed questions about any loaded announcement</td><td>Never — fully automated</td></tr>
+        <tr><td>SEC filing summaries</td><td>Plain-English summaries of 10-K, 10-Q, 8-K content</td><td>Never — fully automated</td></tr>
+        <tr><td>Angry or distressed investors</td><td>Empathy mode — acknowledges frustration, never defensive</td><td>Offers IR team callback</td></tr>
+        <tr><td>M&A strategy questions</td><td>Acknowledges question, explains limitations</td><td>Routes to IR team</td></tr>
+        <tr><td>Forward guidance beyond 1yr</td><td>Cites official guidance only, no speculation</td><td>Routes to IR team</td></tr>
+        <tr><td>Institutional roadshow requests</td><td>Collects verified identity and interest</td><td>Routes to IR team</td></tr>
+        <tr><td>Troll / prank inputs</td><td>Polite redirect, no callback offered</td><td>Logged for review</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<section class="section">
+  <div class="eyebrow"><div class="eyebrow-line"></div><span>Common questions</span></div>
+  <h2 class="section-title">Frequently <em>asked.</em></h2>
+  <div style="margin-top:32px;" class="fade-up">
+    <div class="faq-item open">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How long does onboarding take?</div>
+      <div class="faq-a">The onboarding form takes about 20 minutes to complete. Once submitted, we configure and QA Alfred within 48 hours. Most clients are live within two business days of submitting.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What happens when Alfred doesn't know the answer?</div>
+      <div class="faq-a">Alfred is trained to acknowledge uncertainty honestly rather than speculate. If he can't answer a question from public data, he says so clearly and offers to connect the investor with your IR team directly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do you keep Alfred updated after earnings?</div>
+      <div class="faq-a">After each earnings release or material announcement, simply send us the press release and updated financials. We update Alfred's knowledge base within a few hours — typically before the market opens the following morning.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can Alfred make statements that create regulatory issues?</div>
+      <div class="faq-a">Alfred is specifically trained to cite only public information and never speculate on non-public matters. He includes appropriate disclaimers and routes sensitive questions to your IR team. We recommend a compliance review for each deployment, which we facilitate.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Who sees the callback requests Alfred generates?</div>
+      <div class="faq-a">Verified callback requests are sent directly to the IR contact email you specify during onboarding. You receive the investor's name, institution, professional email, and the question context — everything you need to prepare for the conversation.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="text-align:center;background:var(--cream-dark);max-width:100%;padding:80px 48px;">
+  <h2 class="section-title" style="margin:0 auto 14px;">Ready to see it<br>for <em>your company?</em></h2>
+  <p class="section-sub" style="margin:0 auto 32px;text-align:center;">We'll build a working Alfred demo using your actual public filings and data.</p>
+  <div class="fade-up"><a href="onboarding.html" class="btn-primary">Request a Demo →</a></div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">A</div>
+      <div><div class="footer-name">Alfred the Agent</div><div class="footer-by">A 58th Street Digital Product</div></div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col"><div class="footer-col-title">Product</div><a href="how-it-works.html">How It Works</a><a href="pricing.html">Pricing</a><a href="onboarding.html">Get Started</a></div>
+      <div class="footer-col"><div class="footer-col-title">Company</div><a href="about.html">About</a><a href="blog.html">IR Insights</a><a href="contact.html">Contact</a></div>
+      <div class="footer-col"><div class="footer-col-title">Contact</div><a href="/cdn-cgi/l/email-protection#375f525b5b5877565b51455253435f52565052594319565e"><span class="__cf_email__" data-cfemail="3159545d5d5e71505d574354554559545056545f451f5058">[email&#160;protected]</span></a><a href="https://58thstdigital.com">58thstdigital.com</a></div>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 58th Street Digital LLC · alfredtheagent.ai · All rights reserved.</p></div>
+</footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const observer = new IntersectionObserver((e)=>{ e.forEach(x=>{ if(x.isIntersecting) x.target.classList.add('visible'); }); },{threshold:0.08}

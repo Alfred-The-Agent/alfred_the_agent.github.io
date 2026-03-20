@@ -251,12 +251,14 @@ nav {
   align-items: flex-end;
   position: relative;
   padding-top: 64px;
+  background: transparent;
 }
 
 .alfred-portrait-wrap {
   position: relative;
   width: 100%;
   max-width: 420px;
+  background: var(--cream);
 }
 
 .alfred-portrait-bg {
@@ -264,8 +266,8 @@ nav {
   bottom: 0; right: -20px;
   width: 85%;
   height: 88%;
-  background: #0f1118;
-  border: 1px solid var(--gold-border);
+  background: #ffffff;
+  border: none;
   z-index: 0;
 }
 
@@ -820,6 +822,59 @@ footer {
 @keyframes heroIn {
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 768px) {
+  nav { padding: 0 16px; height: 56px; }
+  .nav-links { display: none; }
+  .nav-name { font-size: 16px; }
+  .nav-by { display: none; }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 80px 20px 40px;
+    gap: 20px;
+    min-height: auto;
+  }
+  .hero-right { display: none; }
+  .hero h1 { font-size: 42px; }
+  .hero-sub { font-size: 14px; }
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+  .ticker-strip { display: none; }
+
+  /* Stock widget - stack on mobile */
+  .stock-bar-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    padding: 16px 20px !important;
+  }
+  .stock-bar-grid > div:last-child { grid-column: span 2; }
+  .stock-bar-grid > div { border-right: none !important; padding: 0 !important; border-bottom: 1px solid rgba(15,17,24,0.06); padding-bottom: 12px !important; }
+
+  .section { padding: 48px 20px; }
+  .steps-grid { grid-template-columns: 1fr; gap: 1px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .trust-inner { grid-template-columns: 1fr; gap: 32px; }
+  .trust-stats { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pricing-card.featured { margin: 0; }
+  .demo-form { grid-template-columns: 1fr; }
+  .demo-form .field-full { grid-column: span 1; }
+  .demo-submit { grid-column: span 1; }
+  footer { padding: 40px 20px 0; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+  .footer-links { grid-template-columns: 1fr 1fr; }
+  h1.page-title { font-size: 40px; }
+  h2.section-title { font-size: 32px; }
+  .page-hero { padding: 80px 20px 40px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 34px; }
+  h1.page-title { font-size: 32px; }
+  .trust-stats { grid-template-columns: 1fr; }
+  .footer-links { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -882,7 +937,6 @@ footer {
 
   <div class="hero-right">
     <div class="alfred-portrait-wrap">
-      <div class="alfred-portrait-bg"></div>
       <img src="alfred-portrait.png" alt="Alfred the Agent" class="alfred-portrait">
       <div class="alfred-portrait-placeholder" style="display:none">
         <div class="monogram">A</div>
@@ -918,7 +972,7 @@ footer {
 
 <!-- LIVE STOCK TICKER -->
 <div style="background:#fff;padding:20px 48px;border-top:1px solid rgba(15,17,24,0.06);border-bottom:1px solid rgba(15,17,24,0.06);">
-  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:center;">
+  <div class="stock-bar-grid" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:0;align-items:center;">
     <div style="padding:0 24px;border-right:1px solid rgba(15,17,24,0.08);">
       <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#8a8d9a;margin-bottom:4px;">BitGo · BTGO</div>
       <div style="display:flex;align-items:baseline;gap:8px;">
@@ -1106,7 +1160,7 @@ footer {
         <li>Dedicated account manager</li>
         <li>Custom SLA & compliance review</li>
       </ul>
-      <a href="#demo" class="btn-pricing">Contact Us</a>
+      <a href="contact.html" class="btn-pricing">Contact Us</a>
     </div>
   </div>
 </section>

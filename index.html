@@ -1257,3 +1257,24 @@ const observer = new IntersectionObserver((entries) => {
     if (e.isIntersecting) { e.target.classList.add('visible'); }
   });
 }, 
+
+                                          </script>
+
+<!-- ALFRED FLOATING INTRO VIDEO -->
+<style>
+.alfred-float{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;align-items:center;animation:alfredSlideIn .7s cubic-bezier(.16,1,.3,1) .8s forwards;opacity:0;}
+@keyframes alfredSlideIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.alfred-float-inner{position:relative;width:148px;filter:drop-shadow(0 12px 40px rgba(15,17,24,0.22));}
+.alfred-float video{width:100%;display:block;background:transparent;}
+.alfred-float-still{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;object-position:bottom center;transition:opacity .4s ease;pointer-events:none;}
+.alfred-float-still.hidden{opacity:0;}
+.alfred-nameplate{background:#0f1118;border:1px solid rgba(184,150,62,0.35);border-top:2px solid #b8963e;padding:7px 14px;text-align:center;width:100%;}
+.alfred-nameplate-name{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:500;color:#fff;letter-spacing:0.04em;}
+.alfred-nameplate-title{font-size:9px;color:#b8963e;letter-spacing:0.14em;text-transform:uppercase;margin-top:1px;}
+.alfred-play-float{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);background:rgba(15,17,24,0.82);border:1px solid rgba(184,150,62,0.4);color:#d4af6a;font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 12px;cursor:pointer;white-space:nowrap;backdrop-filter:blur(4px);transition:all .2s;animation:gentlePulse 2.5s ease-in-out infinite;}
+.alfred-play-float:hover
+        @keyframes ccInstallNudgeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      

@@ -396,7 +396,6 @@ window.addEventListener('DOMContentLoaded', function() {
     video.muted = true;
     video.play().then(function() {
       // Autoplay worked — unmute and show as playing
-      video.muted = false;
       document.getElementById('alfredStill').classList.add('hidden');
       document.getElementById('alfredPlayBtn').classList.add('playing');
       document.getElementById('alfredPulse').style.display = 'none';
@@ -408,7 +407,6 @@ window.addEventListener('DOMContentLoaded', function() {
       };
     }).catch(function() {
       // Autoplay blocked — show Meet Alfred button
-      video.muted = false;
     });
   }, 1500);
 });

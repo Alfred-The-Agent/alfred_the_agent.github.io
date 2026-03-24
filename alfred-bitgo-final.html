@@ -1034,9 +1034,9 @@ async function send() {
   logEv('info', 'Q: "' + text.slice(0,50) + '"');
   showTyping();
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://morning-glade-dd57.dkellykennedy.workers.dev/', {
       method: 'POST',
-      headers: {'Content-Type':'application/json','anthropic-version':'2023-06-01','x-api-key':'sk-ant-...'},,'x-api-key':'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'
+      headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,

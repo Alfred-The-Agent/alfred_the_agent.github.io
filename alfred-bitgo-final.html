@@ -378,7 +378,7 @@ function playAlfredVideo() {
   };
 }
 
-function dismissAlfred() {
+function dismissAlfred() {document.getElementById('alfredVideo').pause();
   const el = document.getElementById('alfredIntro');
   el.style.animation = 'none';
   el.style.transition = 'opacity .3s, transform .3s';

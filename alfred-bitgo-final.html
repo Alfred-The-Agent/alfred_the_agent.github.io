@@ -374,7 +374,7 @@ function playAlfredVideo() {
     btn.classList.remove('playing');
     btn.textContent = '▶ Play Again';
     pulse.style.display = 'none';
-    function toggleMute(){const v=document.getElementById('alfredVideo');v.muted=!v.muted;document.getElementById('muteBtn').textContent=v.muted?'🔇':'🔊';}
+   
   };
 }
 
@@ -386,6 +386,7 @@ function dismissAlfred() {document.getElementById('alfredVideo').pause();
   el.style.transform = 'translateY(20px)';
   setTimeout(() => { el.style.display = 'none'; }, 300);
 }
+  function toggleMute(){const v=document.getElementById('alfredVideo');v.muted=!v.muted;document.getElementById('muteBtn').textContent=v.muted?'🔇':'🔊';}
 
 // Auto-play after 1.5s delay (gives page time to load, respects user attention)
 window.addEventListener('DOMContentLoaded', function() {

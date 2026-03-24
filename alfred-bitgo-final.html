@@ -353,7 +353,7 @@ header{background:var(--ink);padding:0 24px;height:58px;display:flex;align-items
     </video>
     <img class="alfred-still" id="alfredStill" src="Screenshot_2026-03-15_at_5.24.41_PM-removebg-preview.png" alt="Alfred">
     <div class="alfred-pulse" id="alfredPulse"></div>
-    <button class="alfred-play-btn" id="alfredPlayBtn" onclick="playAlfredVideo()">▶ Meet Alfred</button>
+    <button class="alfred-play-btn" id="alfredPlayBtn" onclick="playAlfredVideo()">▶ Meet Alfred</button> <button class="alfred-dismiss" id="muteBtn" onclick="toggleMute()" title="Mute">🔊</button>
     <button class="alfred-dismiss" onclick="dismissAlfred()" title="Dismiss">✕</button>
   </div>
 </div>
@@ -374,6 +374,7 @@ function playAlfredVideo() {
     btn.classList.remove('playing');
     btn.textContent = '▶ Play Again';
     pulse.style.display = 'none';
+    function toggleMute(){const v=document.getElementById('alfredVideo');v.muted=!v.muted;document.getElementById('muteBtn').textContent=v.muted?'🔇':'🔊';}
   };
 }
 

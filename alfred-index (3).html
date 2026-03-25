@@ -1,0 +1,540 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Alfred the Agent — AI-Powered Investor Relations</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"><style>
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+:root{--black:#08090d;--white:#ffffff;--off-white:#f7f7f7;--mid:#888;--border:#e0e0e0;--gold:#c9a84c;}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:#333;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:transparent;border-bottom:1px solid transparent;transition:all .4s;}
+nav.scrolled{background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.1);}nav.scrolled .nav-logo{color:var(--black);}nav.scrolled .nav-logo span{color:rgba(0,0,0,0.4);}nav.scrolled .nav-links a{color:rgba(0,0,0,0.55);}nav.scrolled .nav-links a:hover{color:var(--black);}nav.scrolled .nav-cta{background:var(--black)!important;color:var(--white)!important;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--black);letter-spacing:0.08em;text-decoration:none;display:flex;align-items:center;gap:10px;}
+.nav-logo-a{width:28px;height:28px;background:var(--black);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;color:var(--white);}
+.nav-logo span{color:rgba(0,0,0,0.4);}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{font-size:11px;color:rgba(0,0,0,0.5);text-decoration:none;letter-spacing:0.14em;text-transform:uppercase;transition:color .2s;}
+.nav-links a:hover{color:var(--black);}
+.nav-cta{background:var(--black)!important;color:var(--white)!important;padding:8px 22px;font-weight:700;letter-spacing:0.12em;}
+.nav-cta:hover{background:#333!important;}
+
+/* HERO - split layout */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;background:var(--white);position:relative;column-gap:0;}
+.hero-left{background:var(--white);display:flex;align-items:center;padding:120px 48px 80px;justify-content:flex-end;}
+.hero-left-inner{max-width:560px;overflow:visible;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:32px;opacity:0;animation:fadeUp .7s ease .1s forwards;}
+.hero-eyebrow-line{width:40px;height:1px;background:var(--black);}
+.hero-eyebrow span{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(0,0,0,0.45);font-weight:500;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:400;line-height:1.05;color:var(--black);margin-bottom:24px;letter-spacing:-0.01em;opacity:0;animation:fadeUp .7s ease .2s forwards;max-width:140%;position:relative;z-index:2;}
+.hero h1 em{font-style:italic;color:rgba(0,0,0,0.35);}
+.hero-sub{font-size:17px;color:rgba(0,0,0,0.6);line-height:1.8;margin-bottom:44px;opacity:0;animation:fadeUp .7s ease .3s forwards;}
+.hero-actions{display:flex;align-items:center;gap:16px;margin-bottom:56px;opacity:0;animation:fadeUp .7s ease .4s forwards;}
+.btn-white{background:var(--white);color:var(--black);border:none;padding:15px 36px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
+.btn-white:hover{background:var(--off-white);}
+.btn-outline{color:rgba(0,0,0,0.5);font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;letter-spacing:0.1em;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,0.25);padding-bottom:2px;transition:all .2s;}
+.btn-outline:hover{color:var(--black);border-color:var(--black);}
+.hero-stats{display:flex;gap:0;opacity:0;animation:fadeUp .7s ease .5s forwards;}
+.stat-item{padding:0 32px 0 0;margin-right:32px;border-right:1px solid rgba(0,0,0,0.12);}
+.stat-item:last-child{border:none;margin:0;padding:0;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:var(--black);line-height:1;}
+.stat-label{font-size:10px;color:rgba(0,0,0,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}
+
+/* HERO RIGHT - white panel with Alfred */
+.hero-right{background:var(--white);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:120px 32px 60px 48px;position:relative;}
+.alfred-stage{position:relative;display:flex;flex-direction:column;align-items:center;width:100%;max-width:340px;margin-left:0;}
+.alfred-video-wrap{position:relative;width:260px;margin:0 auto;}
+.alfred-video-wrap video{width:100%;object-fit:contain;object-position:bottom;background:transparent;display:block;filter:drop-shadow(0 24px 48px rgba(0,0,0,0.15));}
+.alfred-nameplate{background:var(--black);padding:18px 28px;text-align:center;width:100%;margin-top:0;border-top:3px solid var(--black);}
+.alfred-nameplate-name{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--white);letter-spacing:0.04em;}
+.alfred-nameplate-role{font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:0.22em;text-transform:uppercase;margin-top:4px;}
+.alfred-status{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:8px;font-size:10px;color:rgba(255,255,255,0.35);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#4ec9b0;box-shadow:0 0 6px #4ec9b0;animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+/* VIDEO CONTROLS */
+.alfred-controls{background:var(--black);width:100%;padding:16px 20px 20px;display:flex;flex-direction:column;gap:10px;}
+.progress-wrap{position:relative;width:100%;height:3px;background:rgba(255,255,255,0.15);cursor:pointer;}
+.progress-bar{height:3px;background:var(--white);width:0%;transition:width .1s linear;pointer-events:none;}
+.controls-row{display:flex;align-items:center;justify-content:space-between;}
+.ctrl-left{display:flex;align-items:center;gap:8px;}
+.ctrl-btn{background:none;border:1px solid rgba(255,255,255,0.2);color:var(--white);width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:all .2s;flex-shrink:0;}
+.ctrl-btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.5);}
+.ctrl-btn.mute-btn{width:auto;padding:0 12px;font-size:11px;letter-spacing:0.08em;gap:5px;}
+.ctrl-time{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:0.06em;white-space:nowrap;}
+
+/* VALUE STRIP */
+.value-strip{background:var(--white);padding:20px 48px;border-top:1px solid var(--border);}
+.value-strip-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:32px;}
+.value-strip p{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--black);font-style:italic;}
+.value-strip span{font-size:11px;color:rgba(0,0,0,0.4);letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap;}
+
+/* FEATURES */
+.features-bg{background:var(--off-white);}
+.section{max-width:1280px;margin:0 auto;padding:100px 48px;}
+.section-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.section-eyebrow-line{width:28px;height:1px;background:var(--black);}
+.section-eyebrow span{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:var(--black);font-weight:500;opacity:0.5;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:50px;font-weight:400;line-height:1.12;color:var(--black);margin-bottom:20px;}
+.section-title em{font-style:italic;color:rgba(0,0,0,0.45);}
+.section-sub{font-size:15px;color:rgba(0,0,0,0.5);line-height:1.8;max-width:560px;margin-bottom:48px;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.feat-card{background:var(--white);padding:40px 32px;border-bottom:2px solid transparent;transition:all .3s;}
+.feat-card:hover{background:var(--off-white);border-bottom-color:var(--black);}
+.feat-icon{font-size:24px;margin-bottom:20px;}
+.feat-card h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--black);margin-bottom:12px;}
+.feat-card p{font-size:13px;color:rgba(0,0,0,0.5);line-height:1.8;}
+
+/* HOW IT WORKS */
+.hiw-bg{background:var(--black);}
+.hiw-bg .section-eyebrow-line{background:var(--white);}
+.hiw-bg .section-eyebrow span{color:rgba(255,255,255,0.4);}
+.hiw-bg .section-title{color:var(--white);}
+.hiw-bg .section-title em{color:rgba(255,255,255,0.4);}
+.hiw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.08);}
+.hiw-card{background:var(--black);padding:48px 36px;border-bottom:2px solid transparent;transition:border-color .3s;}
+.hiw-card:hover{border-bottom-color:var(--white);}
+.hiw-num{font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;color:rgba(255,255,255,0.08);line-height:1;margin-bottom:24px;}
+.hiw-card h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--white);margin-bottom:12px;}
+.hiw-card p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.8;}
+.divider{height:1px;background:var(--border);margin:0 48px;}
+.divider-dark{height:1px;background:rgba(255,255,255,0.08);margin:0 48px;}
+
+/* PRICING */
+.pricing-bg{background:var(--off-white);padding:100px 0;}
+.pricing-inner{max-width:1280px;margin:0 auto;padding:0 48px;}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.pc{background:var(--white);padding:40px 32px;position:relative;border-bottom:3px solid transparent;transition:all .3s;}
+.pc:hover{border-bottom-color:var(--black);}
+.pc.featured{background:var(--black);border-bottom-color:var(--white);}
+.pc-badge{position:absolute;top:18px;right:18px;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--white);background:var(--black);padding:3px 10px;}
+.pc-tier{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:12px;font-weight:500;}
+.pc.featured .pc-tier{color:rgba(255,255,255,0.35);}
+.pc-price{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:500;color:var(--black);line-height:1;margin-bottom:4px;}
+.pc.featured .pc-price{color:var(--white);}
+.pc-period{font-size:11px;color:rgba(0,0,0,0.35);margin-bottom:20px;}
+.pc.featured .pc-period{color:rgba(255,255,255,0.3);}
+.pc-desc{font-size:13px;color:rgba(0,0,0,0.5);line-height:1.65;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.pc.featured .pc-desc{color:rgba(255,255,255,0.45);border-color:rgba(255,255,255,0.1);}
+.pc-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.pc-features li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(0,0,0,0.55);line-height:1.5;}
+.pc.featured .pc-features li{color:rgba(255,255,255,0.6);}
+.pc-features li::before{content:'';width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:2px;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.2);background-image:url("data:image/svg+xml,%3Csvg width='8' height='6' viewBox='0 0 8 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3L3 5L7 1' stroke='%23333' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;}
+.pc.featured .pc-features li::before{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);background-image:url("data:image/svg+xml,%3Csvg width='8' height='6' viewBox='0 0 8 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3L3 5L7 1' stroke='%23fff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center;}
+.pc-btn{width:100%;padding:13px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:block;text-align:center;transition:all .2s;border:1px solid var(--black);background:transparent;color:var(--black);}
+.pc-btn:hover{background:var(--black);color:var(--white);}
+.pc.featured .pc-btn{background:var(--white);border-color:var(--white);color:var(--black);}
+.pc.featured .pc-btn:hover{background:var(--off-white);}
+.pricing-note{text-align:center;margin-top:28px;font-size:12px;color:rgba(0,0,0,0.4);line-height:1.7;}
+.pricing-note a{color:var(--black);text-decoration:underline;}
+
+/* DEMO FORM */
+.demo-bg{background:var(--white);padding:100px 0;}
+.demo-inner{max-width:700px;margin:0 auto;padding:0 48px;}
+.demo-bg .section-eyebrow-line{background:var(--black);}
+.demo-bg .section-eyebrow span{color:rgba(0,0,0,0.4);}
+.demo-bg .section-title{color:var(--black);}
+.demo-bg .section-title em{color:rgba(0,0,0,0.4);}
+.demo-bg .section-sub{color:rgba(0,0,0,0.5);}
+.demo-form{display:flex;flex-direction:column;gap:14px;margin-top:48px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.demo-form label{font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(0,0,0,0.4);display:block;margin-bottom:5px;}
+.demo-form input,.demo-form textarea{width:100%;background:var(--off-white);border:1px solid var(--border);color:var(--black);font-family:'DM Sans',sans-serif;font-size:13px;padding:13px 16px;outline:none;transition:border-color .2s;}
+.demo-form input:focus,.demo-form textarea:focus{border-color:var(--black);}
+.demo-form input::placeholder,.demo-form textarea::placeholder{color:rgba(0,0,0,0.25);}
+.demo-form textarea{min-height:100px;resize:vertical;}
+.btn-submit{background:var(--black);color:var(--white);border:none;padding:15px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;width:100%;transition:background .2s;}
+.btn-submit:hover{background:#222;}
+.form-success{display:none;text-align:center;padding:48px;border:1px solid var(--border);}
+.form-success h3{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--black);margin-bottom:8px;}
+.form-success p{font-size:13px;color:rgba(0,0,0,0.5);line-height:1.7;}
+
+/* FOOTER */
+footer{background:var(--black);border-top:1px solid rgba(255,255,255,0.08);padding:36px 48px;display:flex;align-items:center;justify-content:space-between;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;color:rgba(255,255,255,0.45);letter-spacing:0.06em;display:flex;align-items:center;gap:10px;}
+.footer-logo-a{width:24px;height:24px;background:var(--white);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:700;color:var(--black);}
+.footer-logo span{color:rgba(255,255,255,0.25);}
+.footer-right p{font-size:11px;color:rgba(255,255,255,0.2);line-height:1.7;text-align:right;}
+.footer-right a{color:rgba(255,255,255,0.4);text-decoration:none;}
+.footer-right a:hover{color:var(--white);}
+
+
+/* TRY ALFRED SECTION */
+.try-alfred-section{background:var(--off-white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 48px;}
+.try-alfred-inner{max-width:860px;margin:0 auto;}
+.try-alfred-eyebrow{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(0,0,0,0.4);font-weight:500;margin-bottom:12px;}
+.try-alfred-heading{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:400;color:var(--black);margin-bottom:8px;line-height:1.2;}
+.try-alfred-heading em{font-style:italic;color:rgba(0,0,0,0.35);}
+.try-alfred-sub{font-size:14px;color:rgba(0,0,0,0.5);margin-bottom:28px;line-height:1.7;}
+.alfred-chat-box{background:var(--white);border:1px solid rgba(0,0,0,0.12);margin-bottom:20px;}
+.alfred-messages{min-height:80px;max-height:280px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;}
+.alfred-msg{font-size:13px;line-height:1.7;}
+.alfred-msg.user{color:rgba(0,0,0,0.5);font-style:italic;}
+.alfred-msg.alfred{color:var(--black);}
+.alfred-msg.alfred strong{font-weight:600;}
+.alfred-msg-label{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;}
+.alfred-msg.alfred .alfred-msg-label{color:rgba(0,0,0,0.3);}
+.alfred-msg.user .alfred-msg-label{color:rgba(0,0,0,0.25);}
+.alfred-input-row{display:flex;border-top:1px solid rgba(0,0,0,0.08);}
+.alfred-input{flex:1;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;padding:16px 20px;outline:none;color:var(--black);}
+.alfred-input::placeholder{color:rgba(0,0,0,0.25);}
+.alfred-send{background:var(--black);color:var(--white);border:none;padding:16px 24px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:background .2s;white-space:nowrap;}
+.alfred-send:hover{background:#222;}
+.alfred-send:disabled{opacity:0.4;cursor:default;}
+.alfred-thinking{display:none;padding:12px 20px;font-size:12px;color:rgba(0,0,0,0.35);font-style:italic;border-top:1px solid rgba(0,0,0,0.06);}
+.alfred-thinking.visible{display:block;}
+.demo-companies{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.demo-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-right:4px;white-space:nowrap;}
+.demo-co-btn{font-size:11px;padding:6px 16px;border:1px solid rgba(0,0,0,0.15);background:var(--white);color:rgba(0,0,0,0.6);cursor:pointer;transition:all .2s;letter-spacing:0.04em;font-family:'DM Sans',sans-serif;}
+.demo-co-btn:hover{border-color:var(--black);color:var(--black);background:var(--off-white);}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0);}from{opacity:0;transform:translateY(16px);}}
+
+/* RESPONSIVE */
+@media(max-width:1024px){.hero{grid-template-columns:1fr;}.hero-right{min-height:600px;}}
+@media(max-width:768px){nav{padding:0 20px;}.nav-links{display:none;}.hero-left{padding:100px 24px 60px;}.hero h1{font-size:48px;}.section{padding:64px 20px;}.features-grid,.hiw-grid,.pricing-grid{grid-template-columns:1fr;}.pricing-inner,.demo-inner{padding:0 20px;}.form-row{grid-template-columns:1fr;}footer{padding:28px 20px;flex-direction:column;gap:14px;text-align:center;}.footer-right p{text-align:center;}.value-strip{padding:20px;}.value-strip p{font-size:16px;}}
+</style></head><body>
+
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo"><div class="nav-logo-a">A</div>Alfred<span> the Agent</span></a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://58thstdigital.com" target="_blank">58th Street Digital</a>
+    <a href="#demo" class="nav-cta">Request Demo</a>
+  </div>
+</nav>
+
+<!-- HERO - SPLIT BLACK / WHITE -->
+<section class="hero" id="hero">
+  <div class="hero-left">
+    <div class="hero-left-inner">
+      <div class="hero-eyebrow"><div class="hero-eyebrow-line"></div><span>AI-Powered Investor Relations</span></div>
+      <h1>Your investors deserve<br><em>better than</em><br>a voicemail.</h1>
+      <p class="hero-sub">Alfred is an AI investor relations agent that answers investor questions instantly, 24/7 — with the discretion and precision of a seasoned IR professional.</p>
+      <div class="hero-actions">
+        <a href="#demo" class="btn-white">Request a Demo <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="https://alfredtheagent.ai/alfred-bitgo-final" target="_blank" class="btn-outline">See Live Demo →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Investor Coverage</div></div>
+        <div class="stat-item"><div class="stat-num">&lt;3s</div><div class="stat-label">Response Time</div></div>
+        <div class="stat-item"><div class="stat-num">80%</div><div class="stat-label">Inquiries Resolved</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="alfred-stage">
+      <div class="alfred-video-wrap">
+        <video id="alfredVideo" playsinline preload="auto" muted style="background:transparent;">
+          <source src="Avatar_Video.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="alfred-nameplate">
+        <div class="alfred-nameplate-name">Alfred</div>
+        <div class="alfred-nameplate-role">IR Concierge Agent</div>
+        <div class="alfred-status"><span class="status-dot"></span>Online · Responding now</div>
+      </div>
+      <div class="alfred-controls">
+        <div class="progress-wrap" id="progressWrap" onclick="seekVideo(event)">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="controls-row">
+          <div class="ctrl-left">
+            <button class="ctrl-btn" onclick="restartVideo()" title="Restart">&#8635;</button>
+            <button class="ctrl-btn" onclick="rewindVideo()" title="Rewind 5s">&#171;</button>
+            <button class="ctrl-btn" id="playPauseBtn" onclick="togglePlayPause()" title="Play/Pause">&#9646;&#9646;</button>
+            <button class="ctrl-btn" onclick="forwardVideo()" title="Forward 5s">&#187;</button>
+            <button class="ctrl-btn mute-btn" id="muteBtn" onclick="toggleMute()">&#128263; Unmute</button>
+          </div>
+          <div class="ctrl-time" id="timeDisplay">0:00 / 0:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE STRIP -->
+<div class="value-strip">
+  <div class="value-strip-inner">
+    <p>"Distinguished. Precise. Always available."</p>
+    <span>Alfred the Agent · by 58th Street Digital</span>
+  </div>
+</div>
+
+
+<!-- TRY ALFRED SECTION -->
+<div class="try-alfred-section">
+  <div class="try-alfred-inner">
+    <div class="try-alfred-eyebrow">Live Demo</div>
+    <div class="try-alfred-heading">Ask Alfred <em>anything.</em></div>
+    <p class="try-alfred-sub">Alfred searches the web in real time to answer investor questions about any public company. Try him on a company below or type your own question.</p>
+    <div class="alfred-chat-box">
+      <div class="alfred-messages" id="alfredMessages">
+        <div class="alfred-msg alfred">
+          <div class="alfred-msg-label">Alfred</div>
+          Good day. I am Alfred — an AI investor relations agent with access to live web search. Ask me any investor question about a public company and I will do my best to assist you.
+        </div>
+      </div>
+      <div class="alfred-thinking" id="alfredThinking">Alfred is searching the web...</div>
+      <div class="alfred-input-row">
+        <input class="alfred-input" id="alfredInput" type="text" placeholder="e.g. What is BitGo's revenue for 2024?" onkeydown="if(event.key==='Enter')sendToAlfred()">
+        <button class="alfred-send" id="alfredSendBtn" onclick="sendToAlfred()">Ask Alfred →</button>
+      </div>
+    </div>
+    <div class="demo-companies">
+      <span class="demo-label">Try with:</span>
+      <button class="demo-co-btn" onclick="setDemoCompany('BitGo Holdings (NYSE: BTGO)')">BitGo</button>
+      <button class="demo-co-btn" onclick="setDemoCompany('Coinbase (NASDAQ: COIN)')">Coinbase</button>
+      <button class="demo-co-btn" onclick="setDemoCompany('Circle Internet Group')">Circle</button>
+      <button class="demo-co-btn" onclick="setDemoCompany('Robinhood Markets (NASDAQ: HOOD)')">Robinhood</button>
+      <button class="demo-co-btn" onclick="setDemoCompany('Riot Platforms (NASDAQ: RIOT)')">Riot Platforms</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features-bg" id="features">
+  <div class="section">
+    <div class="section-eyebrow fade-up"><div class="section-eyebrow-line"></div><span>What Alfred Does</span></div>
+    <div class="section-title fade-up">More than a chatbot.<br><em>A full IR concierge.</em></div>
+    <div class="features-grid">
+      <div class="feat-card fade-up"><div class="feat-icon">💬</div><h3>Instant Q&A</h3><p>Answers questions about financials, management, dividends, guidance, and business strategy — instantly, accurately, from your public data.</p></div>
+      <div class="feat-card fade-up"><div class="feat-icon">📰</div><h3>Press Release Intelligence</h3><p>Load any press release and Alfred immediately understands it. Investors can ask detailed questions about your latest announcement the moment it drops.</p></div>
+      <div class="feat-card fade-up"><div class="feat-icon">🛡️</div><h3>Sentiment Detection</h3><p>Alfred identifies distressed or angry investors and responds with empathy rather than data — protecting your brand while de-escalating tension.</p></div>
+      <div class="feat-card fade-up"><div class="feat-icon">✅</div><h3>Verified Callbacks</h3><p>When a question needs a human, Alfred collects verified identity — name, institution, professional email — before routing to your IR team.</p></div>
+      <div class="feat-card fade-up"><div class="feat-icon">📁</div><h3>Filing Summaries</h3><p>Alfred summarizes 10-K, 10-Q, and 8-K filings in plain English so retail investors can understand what your disclosures actually mean.</p></div>
+      <div class="feat-card fade-up"><div class="feat-icon">📊</div><h3>Inquiry Analytics</h3><p>Every question Alfred receives is logged. Monthly reports show what investors are asking, what's trending, and where confusion is concentrated.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<div class="hiw-bg" id="how-it-works">
+  <div class="section">
+    <div class="section-eyebrow fade-up"><div class="section-eyebrow-line"></div><span>How It Works</span></div>
+    <div class="section-title fade-up">Up and running<br><em>in 48 hours.</em></div>
+    <div class="hiw-grid">
+      <div class="hiw-card fade-up"><div class="hiw-num">01</div><h3>You fill out the brief</h3><p>A simple onboarding form captures your company details, key financials, IR contacts, and any press releases you want Alfred briefed on.</p></div>
+      <div class="hiw-card fade-up"><div class="hiw-num">02</div><h3>We configure Alfred</h3><p>Our team reviews your submission, researches your public filings and disclosures, and trains Alfred on your company. We QA every response before going live.</p></div>
+      <div class="hiw-card fade-up"><div class="hiw-num">03</div><h3>Alfred goes live</h3><p>You receive a branded Alfred page for your IR website. Investors get instant answers. Your team gets verified callback requests — not cold inquiries.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div class="pricing-bg" id="pricing">
+  <div class="pricing-inner">
+    <div class="section-eyebrow fade-up"><div class="section-eyebrow-line"></div><span>Pricing</span></div>
+    <div class="section-title fade-up" style="color:var(--black);">Simple pricing.<br><em>No surprises.</em></div>
+    <p class="section-sub fade-up">One Alfred per company. Updated after every earnings release. Cancel anytime.</p>
+    <div class="pricing-grid">
+      <div class="pc fade-up">
+        <div class="pc-tier">Foundation</div><div class="pc-price">$999</div><div class="pc-period">per month · billed monthly</div>
+        <div class="pc-desc">For smaller public companies and pre-IPO firms building their IR presence.</div>
+        <ul class="pc-features"><li>Alfred IR agent, fully configured</li><li>Up to 3 press releases loaded</li><li>Verified callback routing</li><li>Sentiment detection</li><li>Quarterly data updates</li><li>Email support</li></ul>
+        <a href="#demo" class="pc-btn">Request a Demo</a>
+      </div>
+      <div class="pc featured fade-up">
+        <div class="pc-badge">Most Popular</div>
+        <div class="pc-tier">Professional</div><div class="pc-price">$1,999</div><div class="pc-period">per month · billed monthly</div>
+        <div class="pc-desc">For mid-cap public companies with active investor relations programs.</div>
+        <ul class="pc-features"><li>Everything in Foundation</li><li>Unlimited press releases</li><li>Earnings call transcript Q&A</li><li>Monthly inquiry analytics report</li><li>Post-earnings data updates</li><li>Priority support</li></ul>
+        <a href="#demo" class="pc-btn">Request a Demo</a>
+      </div>
+      <div class="pc fade-up">
+        <div class="pc-tier">Enterprise</div><div class="pc-price">$4,999</div><div class="pc-period">per month · billed monthly</div>
+        <div class="pc-desc">For large-cap companies, IR agencies, and multi-company deployments.</div>
+        <ul class="pc-features"><li>Everything in Professional</li><li>Live stock data integration</li><li>CRM / email routing</li><li>Multi-company dashboard</li><li>Dedicated account manager</li><li>Custom SLA & compliance review</li></ul>
+        <a href="#demo" class="pc-btn">Contact Us</a>
+      </div>
+    </div>
+    <p class="pricing-note">Want Alfred plus a senior IR advisor?<br><a href="https://58thstdigital.com" target="_blank">Full-service IR retainers with Daniel Kennedy start at $3,500/mo at 58thstdigital.com →</a></p>
+  </div>
+</div>
+
+<!-- DEMO FORM -->
+<div class="demo-bg" id="demo">
+  <div class="demo-inner">
+    <div class="section-eyebrow fade-up"><div class="section-eyebrow-line"></div><span>Get Started</span></div>
+    <div class="section-title fade-up">Request a <em>Demo.</em></div>
+    <p class="section-sub fade-up">We'll build a working Alfred configured for your company using your actual public data and walk you through it on a 30-minute call. No commitment required.</p>
+    <form class="demo-form" id="demoForm" onsubmit="submitDemo(event)">
+      <div class="form-row">
+        <div><label>Your Name *</label><input type="text" id="d-name" placeholder="Full name" required></div>
+        <div><label>Title</label><input type="text" id="d-title" placeholder="VP Investor Relations"></div>
+      </div>
+      <div class="form-row">
+        <div><label>Company *</label><input type="text" id="d-company" placeholder="Company name" required></div>
+        <div><label>Ticker Symbol</label><input type="text" id="d-ticker" placeholder="NYSE: XYZ"></div>
+      </div>
+      <div><label>Email *</label><input type="email" id="d-email" placeholder="your@company.com" required></div>
+      <div><label>What's your biggest IR challenge?</label><textarea id="d-message" placeholder="Tell us what's keeping you up at night..."></textarea></div>
+      <button type="submit" class="btn-submit">Request My Demo →</button>
+    </form>
+    <div class="form-success" id="demoSuccess">
+      <h3>Request received.</h3>
+      <p>The 58th Street Digital team will be in touch within one business day.<br>In the meantime, explore the live demo at <a href="https://alfredtheagent.ai/alfred-bitgo-final" target="_blank">alfredtheagent.ai/alfred-bitgo-final</a></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo"><div class="footer-logo-a">A</div>Alfred<span> the Agent</span></div>
+  <div class="footer-right"><p>A <a href="https://58thstdigital.com" target="_blank">58th Street Digital</a> Product · © 2026 58th Street Digital LLC.<br><a href="mailto:58thstdigital@gmail.com">58thstdigital@gmail.com</a></p></div>
+</footer>
+
+<script>
+// NAV
+window.addEventListener('scroll',function(){
+  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+// VIDEO
+var video = document.getElementById('alfredVideo');
+var progressBar = document.getElementById('progressBar');
+var timeDisplay = document.getElementById('timeDisplay');
+var playPauseBtn = document.getElementById('playPauseBtn');
+var muteBtn = document.getElementById('muteBtn');
+
+function formatTime(s){
+  var m=Math.floor(s/60);
+  var sec=Math.floor(s%60);
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
+video.addEventListener('timeupdate',function(){
+  if(video.duration){
+    progressBar.style.width=(video.currentTime/video.duration*100)+'%';
+    timeDisplay.textContent=formatTime(video.currentTime)+' / '+formatTime(video.duration);
+  }
+  playPauseBtn.innerHTML=video.paused?'&#9654;':'&#9646;&#9646;';
+});
+
+video.addEventListener('ended',function(){
+  playPauseBtn.innerHTML='&#9654;';
+  progressBar.style.width='100%';
+});
+
+function togglePlayPause(){
+  if(video.paused){video.play();}else{video.pause();}
+}
+
+function restartVideo(){
+  video.currentTime=0;
+  video.play();
+}
+
+function rewindVideo(){
+  video.currentTime=Math.max(0,video.currentTime-5);
+}
+
+function forwardVideo(){
+  video.currentTime=Math.min(video.duration||0,video.currentTime+5);
+}
+
+function toggleMute(){
+  video.muted=!video.muted;
+  muteBtn.innerHTML=video.muted?'&#128263; Unmute':'&#128266; Mute';
+}
+
+function seekVideo(e){
+  var wrap=document.getElementById('progressWrap');
+  var rect=wrap.getBoundingClientRect();
+  var pct=(e.clientX-rect.left)/rect.width;
+  video.currentTime=pct*(video.duration||0);
+}
+
+// Autoplay muted on load
+window.addEventListener('DOMContentLoaded',function(){
+  video.muted=true;
+  video.play().then(function(){
+    playPauseBtn.innerHTML='&#9646;&#9646;';
+  }).catch(function(){
+    playPauseBtn.innerHTML='&#9654;';
+  });
+});
+
+// FORM
+window.submitDemo=function(e){
+  e.preventDefault();
+  var name=document.getElementById('d-name').value.trim();
+  var company=document.getElementById('d-company').value.trim();
+  var email=document.getElementById('d-email').value.trim();
+  if(!name||!company||!email){alert('Please fill in your name, company, and email.');return;}
+  document.getElementById('demoForm').style.display='none';
+  document.getElementById('demoSuccess').style.display='block';
+};
+
+
+// ALFRED CHAT
+async function sendToAlfred() {
+  var input = document.getElementById('alfredInput');
+  var q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  document.getElementById('alfredSendBtn').disabled = true;
+
+  var msgs = document.getElementById('alfredMessages');
+  // Add user message
+  var userDiv = document.createElement('div');
+  userDiv.className = 'alfred-msg user';
+  userDiv.innerHTML = '<div class="alfred-msg-label">You</div>' + q;
+  msgs.appendChild(userDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Show thinking
+  document.getElementById('alfredThinking').classList.add('visible');
+
+  try {
+    var res = await fetch('https://morning-glade-dd57.dkellykennedy.workers.dev/', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: 'You are Alfred, a distinguished AI investor relations agent. You have access to web search and use it to answer investor questions about public companies. Speak with precision and authority. Keep responses concise — 2-4 sentences for factual queries. Always cite your source briefly at the end with [Source: ...].',
+        tools: [{"type":"web_search_20250305","name":"web_search"}],
+        messages: [{role:'user', content: q}]
+      })
+    });
+    var data = await res.json();
+    var reply = '';
+    if (data.content) {
+      for (var i = 0; i < data.content.length; i++) {
+        if (data.content[i].type === 'text') reply += data.content[i].text;
+      }
+    }
+    if (!reply) reply = 'My apologies — I encountered a difficulty retrieving that information. Please try again.';
+
+    document.getElementById('alfredThinking').classList.remove('visible');
+    var alfredDiv = document.createElement('div');
+    alfredDiv.className = 'alfred-msg alfred';
+    alfredDiv.innerHTML = '<div class="alfred-msg-label">Alfred</div>' + reply.replace(/\n/g,'<br>');
+    msgs.appendChild(alfredDiv);
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch(e) {
+    document.getElementById('alfredThinking').classList.remove('visible');
+    var errDiv = document.createElement('div');
+    errDiv.className = 'alfred-msg alfred';
+    errDiv.innerHTML = '<div class="alfred-msg-label">Alfred</div>My apologies — I am having difficulty connecting. Please try again momentarily.';
+    msgs.appendChild(errDiv);
+  }
+  document.getElementById('alfredSendBtn').disabled = false;
+  document.getElementById('alfredInput').focus();
+}
+
+function setDemoCompany(company) {
+  document.getElementById('alfredInput').value = 'What should investors know about ' + company + '?';
+  document.getElementById('alfredInput').focus();
+}
+
+// FADE UP
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+</script>
+</body></html>

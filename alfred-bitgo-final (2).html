@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alfred — BitGo Investor Relations</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0a0c10;--ink-soft:#12161f;--gold:#c9a84c;--gold-light:#e0be7a;
+  --gold-pale:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.2);
+  --btgo:#0f2d5e;--btgo-light:#1a4a8a;--border:rgba(255,255,255,0.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* HEADER */
+header{background:var(--ink);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gold-border);flex-shrink:0;}
+.hdr-left{display:flex;align-items:center;gap:14px;}
+.alfred-av{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--gold);overflow:hidden;flex-shrink:0;background:var(--ink-soft);display:flex;align-items:center;justify-content:center;}
+.alfred-av img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+.alfred-av .av-fallback{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);display:none;}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;}
+.brand-sub{font-size:9px;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-top:1px;}
+.divv{width:1px;height:26px;background:rgba(255,255,255,0.08);}
+.co-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);}
+.co-tick{font-size:10px;color:var(--gold);letter-spacing:0.1em;margin-top:1px;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.stock-pill{background:rgba(201,168,76,0.1);border:1px solid var(--gold-border);padding:5px 12px;display:flex;align-items:center;gap:8px;}
+.sp-price{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--gold-light);}
+.sp-delta.neg{color:#e07070;} .sp-delta.pos{color:#6db87a;} .sp-delta{font-size:11px;}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:10px;color:#6db87a;letter-spacing:0.08em;}
+.live-badge::before{content:'';width:6px;height:6px;background:#6db87a;border-radius:50%;animation:pulse 2s infinite;}
+
+/* LANGUAGE SELECTOR */
+.lang-selector{position:relative;}
+.lang-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);padding:5px 10px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:6px;letter-spacing:0.05em;transition:all .2s;}
+.lang-btn:hover{border-color:var(--gold-border);color:var(--gold-light);}
+.lang-btn .globe{font-size:13px;}
+.lang-btn .chevron{font-size:8px;transition:transform .2s;}
+.lang-btn.open .chevron{transform:rotate(180deg);}
+.lang-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#13171f;border:1px solid var(--gold-border);min-width:160px;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+.lang-dropdown.open{display:block;animation:fadeIn .15s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.lang-option{padding:9px 14px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;color:rgba(255,255,255,0.7);}
+.lang-option:last-child{border:none;}
+.lang-option:hover{background:rgba(201,168,76,0.08);color:var(--gold-light);}
+.lang-option.active{color:var(--gold);background:rgba(201,168,76,0.06);}
+.lang-option .flag{font-size:16px;}
+.lang-auto-banner{display:none;background:rgba(201,168,76,0.08);border-bottom:1px solid var(--gold-border);padding:7px 20px;font-size:11px;color:var(--gold-light);align-items:center;justify-content:space-between;flex-shrink:0;}
+.lang-auto-banner.show{display:flex;}
+.lang-auto-banner button{background:none;border:1px solid var(--gold-border);color:var(--gold);padding:3px 10px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.08em;}
+.lang-auto-banner button:hover{background:rgba(201,168,76,0.1);}
+
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* LAYOUT */
+.main{display:grid;grid-template-columns:260px 1fr 300px;flex:1;overflow:hidden;}
+.left{background:#0d1018;border-right:1px solid rgba(255,255,255,0.05);overflow-y:auto;}
+.pblock{padding:16px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.plabel{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:500;}
+.fact{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:11px;}
+.fact:last-child{border:none;}
+.fact label{color:rgba(255,255,255,0.3);}
+.fact span{color:rgba(255,255,255,0.8);font-weight:500;text-align:right;max-width:140px;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.mbox{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:10px;}
+.mbox label{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25);display:block;margin-bottom:3px;}
+.mbox .mv{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;}
+.mbox .md{font-size:10px;margin-top:2px;}
+.up{color:#6db87a;} .dn{color:#e07070;}
+.pr-zone{border:1px dashed rgba(201,168,76,0.25);padding:12px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:8px;}
+.pr-zone:hover{border-color:var(--gold);background:rgba(201,168,76,0.05);}
+.pr-zone p{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.5;}
+.pr-zone strong{color:var(--gold-light);font-size:12px;}
+#prTextarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);font-family:'DM Sans',sans-serif;font-size:11px;padding:8px;resize:vertical;min-height:80px;outline:none;display:none;margin-top:6px;line-height:1.5;}
+.btn-load{width:100%;background:var(--gold);color:var(--ink);border:none;padding:8px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;display:none;}
+.pr-tag{display:flex;align-items:center;justify-content:space-between;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:5px 8px;font-size:10px;color:var(--gold-light);margin-bottom:4px;}
+.pr-tag button{background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:12px;}
+.fil{display:flex;align-items:center;gap:7px;padding:6px 8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);margin-bottom:4px;cursor:pointer;font-size:11px;}
+.ftag{background:rgba(201,168,76,0.15);color:var(--gold-light);font-size:9px;font-weight:700;padding:2px 5px;min-width:26px;text-align:center;}
+.fil .fn{color:rgba(255,255,255,0.7);} .fil .fd{color:rgba(255,255,255,0.25);font-size:10px;}
+
+/* CHAT */
+.search-status{display:none;padding:6px 20px;background:rgba(201,168,76,0.06);border-bottom:1px solid rgba(201,168,76,0.1);font-size:11px;color:var(--gold);align-items:center;gap:8px;flex-shrink:0;}
+.search-status.visible{display:flex;}
+.sdot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 1s infinite;flex-shrink:0;}
+.chat{display:flex;flex-direction:column;background:#111318;overflow:hidden;}
+.ctop{padding:11px 20px;background:#0d1018;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ctop h3{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:rgba(255,255,255,0.8);}
+.online{font-size:10px;color:#6db87a;letter-spacing:0.1em;display:flex;align-items:center;gap:5px;}
+.online::before{content:'';width:6px;height:6px;background:#6db87a;border-radius:50%;animation:pulse 2s infinite;}
+.sent-bar{padding:6px 20px;font-size:11px;font-weight:500;align-items:center;gap:8px;display:none;flex-shrink:0;}
+.sent-bar.angry{display:flex;background:rgba(139,38,53,0.12);border-bottom:1px solid rgba(139,38,53,0.15);color:#d47a85;}
+.sent-bar.troll{display:flex;background:rgba(201,168,76,0.06);border-bottom:1px solid rgba(201,168,76,0.12);color:var(--gold);}
+.msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;}
+.msg{display:flex;gap:10px;animation:msgIn .3s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse;}
+.av{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;}
+.av.alfred{border:1.5px solid rgba(201,168,76,0.35);background:var(--ink-soft);font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);}
+.av.alfred img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.av.user{background:var(--btgo);color:#fff;font-size:10px;}
+.bub{max-width:75%;padding:11px 15px;font-size:13px;line-height:1.65;border-radius:2px;}
+.msg.alfred .bub{background:#1a1e27;border:1px solid rgba(255,255,255,0.06);border-left:2px solid var(--gold);color:rgba(255,255,255,0.82);}
+.msg.user .bub{background:var(--btgo);border:1px solid var(--btgo-light);color:rgba(255,255,255,0.9);}
+.bub strong{color:#fff;font-weight:500;}
+.src-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.sc{font-size:9px;padding:2px 7px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);letter-spacing:.06em;font-weight:500;}
+.sc.web{background:rgba(100,160,255,0.1);border-color:rgba(100,160,255,0.2);color:#7aabe0;}
+.flag{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;margin-bottom:6px;font-weight:600;letter-spacing:.08em;border-radius:2px;}
+.flag.angry{background:rgba(139,38,53,0.15);color:#d47a85;border:1px solid rgba(139,38,53,0.2);}
+.flag.troll{background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid rgba(201,168,76,0.2);}
+.flag.verified{background:rgba(26,92,56,0.15);color:#6db87a;border:1px solid rgba(26,92,56,0.2);}
+.flag.pr{background:rgba(15,45,94,0.3);color:#7aabe0;border:1px solid rgba(15,45,94,0.4);}
+.flag.search{background:rgba(100,160,255,0.1);color:#7aabe0;border:1px solid rgba(100,160,255,0.2);}
+.cb-card{margin-top:12px;background:rgba(15,45,94,0.2);border:1px solid rgba(15,45,94,0.4);border-left:2px solid var(--btgo-light);padding:13px;}
+.cb-card h4{font-family:'Cormorant Garamond',serif;font-size:15px;color:#a8c4e8;margin-bottom:4px;}
+.cb-card p{font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:11px;}
+.cb-card button{background:var(--btgo);color:#fff;border:1px solid var(--btgo-light);padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;width:100%;transition:background .2s;}
+.typing{display:flex;align-items:center;gap:5px;padding:10px 13px;background:#1a1e27;border:1px solid rgba(255,255,255,0.06);border-left:2px solid var(--gold);width:fit-content;}
+.typing span{width:5px;height:5px;background:var(--gold);border-radius:50%;animation:typing 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;} .typing span:nth-child(3){animation-delay:.4s;}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.input-area{padding:13px 18px;background:#0d1018;border-top:1px solid rgba(255,255,255,0.05);flex-shrink:0;}
+.suggs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.sugg{font-size:11px;padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);cursor:pointer;transition:all .2s;}
+.sugg:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.25);color:var(--gold-light);}
+.sugg.red{border-color:rgba(139,38,53,0.25);color:rgba(212,122,133,0.6);}
+.sugg.blue{border-color:rgba(100,160,255,0.2);color:rgba(122,171,224,0.7);}
+.sugg.blue:hover{background:rgba(100,160,255,0.08);color:#7aabe0;}
+.irow{display:flex;gap:8px;}
+.irow input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 13px;outline:none;transition:border-color .2s;}
+.irow input:focus{border-color:rgba(201,168,76,0.35);}
+.irow input::placeholder{color:rgba(255,255,255,0.22);}
+.send{background:var(--gold);color:var(--ink);border:none;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;white-space:nowrap;}
+.send:hover{background:var(--gold-light);}
+.send:disabled{opacity:.4;cursor:default;}
+
+/* RIGHT PANEL */
+.right{background:#0d1018;border-left:1px solid rgba(255,255,255,0.05);overflow-y:auto;display:flex;flex-direction:column;}
+.cal-item{display:flex;gap:9px;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-left:2px solid var(--btgo-light);margin-bottom:4px;}
+.cal-item.earn{border-left-color:var(--gold);}
+.cdate .day{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;line-height:1;}
+.cdate .mo{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.25);}
+.cev{font-size:11px;font-weight:500;color:rgba(255,255,255,0.75);}
+.cdet{font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;}
+.an-row{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);margin-bottom:3px;font-size:11px;}
+.an-row .firm{color:rgba(255,255,255,0.7);font-weight:500;}
+.an-row .pt{color:rgba(255,255,255,0.25);font-size:10px;}
+.rating{font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 6px;}
+.rating.buy{background:rgba(26,92,56,0.2);color:#6db87a;}
+.rating.hold{background:rgba(201,168,76,0.12);color:var(--gold);}
+.rating.ow{background:rgba(26,92,56,0.15);color:#6db87a;}
+.act-item{font-size:11px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);color:rgba(255,255,255,0.4);}
+.disc{padding:12px 14px;font-size:10px;color:rgba(255,255,255,0.18);line-height:1.6;border-top:1px solid rgba(255,255,255,0.04);margin-top:auto;}
+
+/* MODAL */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-ov.open{display:flex;}
+.modal{background:#13171f;border:1px solid rgba(201,168,76,0.22);max-width:420px;width:90%;padding:28px;animation:msgIn .25s ease;}
+.modal-ey{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;margin-bottom:5px;font-weight:500;}
+.modal > p{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:18px;line-height:1.6;}
+.mf{display:flex;flex-direction:column;gap:9px;}
+.mf label{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:4px;}
+.mf input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);padding:9px 12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.mf input:focus{border-color:rgba(201,168,76,0.45);}
+.mf input.err{border-color:#8b2635;}
+.merr{font-size:10px;color:#d47a85;margin-top:2px;display:none;}
+.macts{display:flex;gap:8px;margin-top:5px;}
+.btn-verify{flex:1;background:var(--gold);color:var(--ink);border:none;padding:11px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
+.btn-cancel{background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;}
+.mnote{font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:7px;}
+::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);}
+
+/* ALFRED VIDEO INTRO */
+.alfred-intro{position:fixed;bottom:24px;right:24px;z-index:888;display:flex;flex-direction:column;align-items:center;pointer-events:none;}
+.alfred-intro.visible{pointer-events:all;}
+.alfred-video-wrap{position:relative;width:160px;height:260px;filter:drop-shadow(0 8px 32px rgba(0,0,0,0.7));}
+.alfred-video-wrap video{width:100%;height:100%;object-fit:contain;object-position:bottom;}
+.alfred-video-wrap img.alfred-still{width:100%;height:100%;object-fit:contain;object-position:bottom;position:absolute;top:0;left:0;transition:opacity .4s ease;}
+.alfred-video-wrap img.alfred-still.hidden{opacity:0;pointer-events:none;}
+.alfred-play-btn{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(201,168,76,0.15);border:1px solid var(--gold-border);color:var(--gold-light);font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:5px 12px;cursor:pointer;transition:all .2s;white-space:nowrap;backdrop-filter:blur(4px);}
+.alfred-play-btn:hover{background:rgba(201,168,76,0.25);border-color:var(--gold);}
+.alfred-play-btn.playing{display:none;}
+.alfred-dismiss{position:absolute;top:-8px;right:-8px;width:20px;height:20px;background:#13171f;border:1px solid var(--gold-border);border-radius:50%;color:rgba(255,255,255,0.4);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.alfred-dismiss:hover{color:#fff;border-color:var(--gold);}
+.alfred-pulse{position:absolute;top:-4px;right:-4px;width:10px;height:10px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes introSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.alfred-intro{animation:introSlide .6s ease forwards;opacity:0;}
+</style>
+</head>
+<body>
+
+<!-- AUTO-DETECT LANGUAGE BANNER -->
+<div class="lang-auto-banner" id="langBanner">
+  <span id="langBannerText"></span>
+  <div style="display:flex;gap:8px;">
+    <button onclick="dismissBanner(true)" id="langBannerAccept"></button>
+    <button onclick="dismissBanner(false)" style="border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);" id="langBannerDismiss"></button>
+  </div>
+</div>
+
+<header>
+  <div class="hdr-left">
+    <div class="alfred-av" id="alfredAv">
+      <img src="alfred-portrait.png" alt="Alfred" id="alfredImg" onerror="handleImgError()">
+      <span class="av-fallback" id="avFallback">A</span>
+    </div>
+    <div><div class="brand-name" data-i18n="brandName">Alfred</div><div class="brand-sub" data-i18n="brandSub">Investor Relations Agent</div></div>
+    <div class="divv"></div>
+    <div><div class="co-name">BitGo Holdings, Inc.</div><div class="co-tick">NYSE: BTGO · Digital Asset Infrastructure</div></div>
+  </div>
+  <div class="hdr-right">
+    <div class="stock-pill" id="stockPill"><span class="sp-price" id="spPrice">—</span><span class="sp-delta" id="spDelta" style="font-size:11px;"></span></div>
+    <div class="live-badge" data-i18n="liveBadge">Live · Web Search Active</div>
+    <!-- LANGUAGE SELECTOR -->
+    <div class="lang-selector">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangDropdown()">
+        <span class="globe">🌐</span>
+        <span id="langBtnLabel">EN</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <div class="lang-option active" onclick="setLang('en')" data-lang="en"><span class="flag">🇺🇸</span> English</div>
+        <div class="lang-option" onclick="setLang('zh')" data-lang="zh"><span class="flag">🇨🇳</span> 中文</div>
+        <div class="lang-option" onclick="setLang('es')" data-lang="es"><span class="flag">🇪🇸</span> Español</div>
+        <div class="lang-option" onclick="setLang('ja')" data-lang="ja"><span class="flag">🇯🇵</span> 日本語</div>
+        <div class="lang-option" onclick="setLang('ko')" data-lang="ko"><span class="flag">🇰🇷</span> 한국어</div>
+        <div class="lang-option" onclick="setLang('fa')" data-lang="fa"><span class="flag">🇮🇷</span> فارسی</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="pblock">
+      <div class="plabel" data-i18n="snapshotLabel">Company Snapshot</div>
+      <div class="fact"><label data-i18n="founded">Founded</label><span>2013</span></div>
+      <div class="fact"><label>CEO</label><span>Mike Belshe</span></div>
+      <div class="fact"><label data-i18n="hq">HQ</label><span>Palo Alto, CA</span></div>
+      <div class="fact"><label>IPO</label><span data-i18n="ipoDate">Jan 22, 2026</span></div>
+      <div class="fact"><label data-i18n="ipoPrice">IPO Price</label><span>$18.00</span></div>
+      <div class="fact"><label data-i18n="marketCap">Market Cap</label><span>~$1.26B</span></div>
+      <div class="fact"><label>AUC</label><span>$104B+</span></div>
+      <div class="fact"><label data-i18n="clients">Clients</label><span data-i18n="clientsVal">4,600+ institutions</span></div>
+      <div class="fact"><label data-i18n="charter">OCC Charter</label><span data-i18n="charterVal">National Trust Bank</span></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel" data-i18n="financialsLabel">Key Financials</div>
+      <div class="mgrid">
+        <div class="mbox"><label data-i18n="fy24rev">FY2024 Rev</label><div class="mv">$3.1B</div><div class="md up">▲ +233%</div></div>
+        <div class="mbox"><label>H1 2025</label><div class="mv">$4.2B</div><div class="md up">▲ +275%</div></div>
+        <div class="mbox"><label data-i18n="fy24ni">FY2024 NI</label><div class="mv">$157M</div><div class="md up" data-i18n="strong">▲ strong</div></div>
+        <div class="mbox"><label data-i18n="custodyShare">Custody Share</label><div class="mv">20–30%</div><div class="md up">▲ +96% AUC</div></div>
+      </div>
+    </div>
+    <div class="pblock">
+      <div class="plabel" data-i18n="prLabel">Load Press Release</div>
+      <div class="pr-zone" id="prZone" onclick="togglePR()"><strong data-i18n="prAdd">+ Add Press Release</strong><p data-i18n="prSub">Alfred answers investor questions directly from it</p></div>
+      <textarea id="prTextarea" data-i18n-placeholder="prPlaceholder"></textarea>
+      <button class="btn-load" id="btnLoadPR" onclick="loadPR()" data-i18n="prLoadBtn">Load into Alfred →</button>
+      <div id="prList"></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel" data-i18n="filingsLabel">SEC Filings</div>
+      <div class="fil"><span class="ftag">S-1</span><div><div class="fn" data-i18n="filing1">IPO Registration</div><div class="fd">Jan 12, 2026</div></div></div>
+      <div class="fil"><span class="ftag">8-K</span><div><div class="fn" data-i18n="filing2">IPO Pricing</div><div class="fd">Jan 21, 2026</div></div></div>
+      <div class="fil"><span class="ftag">8-K</span><div><div class="fn" data-i18n="filing3">NYSE Listing</div><div class="fd">Jan 22, 2026</div></div></div>
+      <div class="fil"><span class="ftag">10-K</span><div><div class="fn" data-i18n="filing4">Annual Report FY2024</div><div class="fd" data-i18n="filing4date">Mar 2026</div></div></div>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat">
+    <div class="ctop"><h3 data-i18n="chatTitle">Alfred — BitGo IR Concierge</h3><div class="online" data-i18n="onlineStatus">Online · Web Search Active</div></div>
+    <div class="search-status" id="searchStatus"><div class="sdot"></div><span id="searchMsg" data-i18n="searching">Alfred is searching the web...</span></div>
+    <div class="sent-bar" id="sentBar"></div>
+    <div class="msgs" id="msgs"></div>
+    <div class="input-area">
+      <div class="suggs" id="suggs">
+        <button class="sugg" onclick="ask(this.dataset.q)" data-i18n-q="sugg1" data-q="What does BitGo do?">What does BitGo do?</button>
+        <button class="sugg" onclick="ask(this.dataset.q)" data-i18n-q="sugg2" data-q="Tell me about the IPO">Tell me about the IPO</button>
+        <button class="sugg" onclick="ask(this.dataset.q)" data-i18n-q="sugg3" data-q="What is BitGo's revenue?">What is BitGo's revenue?</button>
+        <button class="sugg blue" onclick="ask(this.dataset.q)" data-i18n-q="sugg4" data-q="Any recent BitGo news?">Any recent BitGo news?</button>
+        <button class="sugg blue" onclick="ask(this.dataset.q)" data-i18n-q="sugg5" data-q="Latest BTGO stock news?">Latest BTGO stock news?</button>
+        <button class="sugg" onclick="ask(this.dataset.q)" data-i18n-q="sugg6" data-q="Explain the custody model">Explain the custody model</button>
+        <button class="sugg red" onclick="ask(this.dataset.q)" data-i18n-q="sugg7" data-q="Your stock is a disaster, I lost everything!">Your stock is a disaster, I lost everything!</button>
+      </div>
+      <div class="irow">
+        <input type="text" id="userInput" data-i18n-placeholder="inputPlaceholder" placeholder="Ask Alfred any investor question about BitGo…" onkeydown="if(event.key==='Enter')send()">
+        <button class="send" id="sendBtn" onclick="send()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          <span data-i18n="sendBtn">Ask Alfred</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right">
+    <div class="pblock">
+      <div class="plabel" data-i18n="calLabel">IR Calendar</div>
+      <div class="cal-item earn"><div class="cdate"><div class="day">22</div><div class="mo" data-i18n="apr">Apr</div></div><div><div class="cev" data-i18n="cal1">Q1 2026 Earnings</div><div class="cdet" data-i18n="cal1det">Webcast · 9:00 AM ET</div></div></div>
+      <div class="cal-item"><div class="cdate"><div class="day">12</div><div class="mo" data-i18n="may">May</div></div><div><div class="cev" data-i18n="cal2">Consensus Crypto Conf.</div><div class="cdet" data-i18n="cal2det">CEO Presenting</div></div></div>
+      <div class="cal-item"><div class="cdate"><div class="day">17</div><div class="mo" data-i18n="jun">Jun</div></div><div><div class="cev" data-i18n="cal3">Annual Shareholders Meeting</div><div class="cdet" data-i18n="cal3det">Palo Alto · 10:00 AM PT</div></div></div>
+      <div class="cal-item earn"><div class="cdate"><div class="day">22</div><div class="mo" data-i18n="jul">Jul</div></div><div><div class="cev" data-i18n="cal4">Q2 2026 Earnings</div><div class="cdet" data-i18n="cal4det">Webcast · 9:00 AM ET</div></div></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel" data-i18n="analystLabel">Analyst Coverage</div>
+      <div class="an-row"><div><div class="firm">VanEck</div><div class="pt">PT: $21.00</div></div><span class="rating buy">BUY</span></div>
+      <div class="an-row"><div><div class="firm">Canaccord Genuity</div><div class="pt">PT: $19.50</div></div><span class="rating ow">OWT</span></div>
+      <div class="an-row"><div><div class="firm">H.C. Wainwright</div><div class="pt">PT: $20.00</div></div><span class="rating buy">BUY</span></div>
+      <div class="an-row"><div><div class="firm">Compass Point</div><div class="pt">PT: $16.00</div></div><span class="rating hold">HOLD</span></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel" data-i18n="activityLabel">Activity Feed</div>
+      <div id="actFeed"><div style="font-size:11px;color:rgba(255,255,255,0.2);text-align:center;padding:8px;" data-i18n="noActivity">No activity yet</div></div>
+    </div>
+    <div class="disc" data-i18n="disclaimer">Alfred provides publicly available information only. Not investment advice. Always review official SEC filings at sec.gov.</div>
+  </div>
+</div>
+
+<!-- CALLBACK MODAL -->
+<div class="modal-ov" id="verifyModal">
+  <div class="modal">
+    <div class="modal-ey" data-i18n="modalEyebrow">Identity Verification Required</div>
+    <h3 data-i18n="modalTitle">Schedule IR Callback</h3>
+    <p data-i18n="modalSub">To connect with BitGo's IR team, we need to verify your identity.</p>
+    <div class="mf">
+      <div><label data-i18n="fieldName">Full Name *</label><input type="text" id="v-name"><div class="merr" id="err-name" data-i18n="errName">Please enter your name</div></div>
+      <div><label data-i18n="fieldEmail">Professional Email *</label><input type="email" id="v-email"><div class="merr" id="err-email" data-i18n="errEmail">Please enter a valid email</div></div>
+      <div><label data-i18n="fieldInst">Institution / Fund *</label><input type="text" id="v-inst"><div class="merr" id="err-inst" data-i18n="errInst">Please enter your institution</div></div>
+      <div><label data-i18n="fieldPhone">Phone (optional)</label><input type="tel" id="v-phone" data-i18n-placeholder="phonePlaceholder"></div>
+      <div><label data-i18n="fieldTime">Preferred Time</label><input type="text" id="v-time" data-i18n-placeholder="timePlaceholder"></div>
+      <div class="macts">
+        <button class="btn-cancel" onclick="closeModal()" data-i18n="cancelBtn">Cancel</button>
+        <button class="btn-verify" onclick="submitVerify()" data-i18n="verifyBtn">Verify & Request Callback</button>
+      </div>
+      <div class="mnote" data-i18n="modalNote">Your information is used solely to facilitate this IR conversation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ALFRED FLOATING INTRO VIDEO -->
+<div class="alfred-intro visible" id="alfredIntro">
+  <div class="alfred-video-wrap">
+    <video id="alfredVideo" playsinline preload="auto" style="background:transparent;">
+      <source src="Alfred_Web_Intro.mp4" type="video/mp4">
+    </video>
+    <img class="alfred-still" id="alfredStill" src="Screenshot_2026-03-15_at_5.24.41_PM-removebg-preview.png" alt="Alfred">
+    <div class="alfred-pulse" id="alfredPulse"></div>
+    <button class="alfred-play-btn" id="alfredPlayBtn" onclick="playAlfredVideo()">▶ Meet Alfred</button>
+    <button class="alfred-dismiss" onclick="dismissAlfred()" title="Dismiss">✕</button>
+  </div>
+</div>
+
+<script>
+// ─── COMPANY CONFIG ──────────────────────────────────────────────────────────
+const COMPANY_TICKER = 'BTGO';
+const COMPANY_NAME = 'BitGo Holdings, Inc.';
+const COMPANY_EXCHANGE = 'NYSE';
+
+// ─── LIVE STOCK QUOTE (via Cloudflare worker proxy) ──────────────────────────
+async function fetchLiveQuote() {
+  try {
+    const res = await fetch(
+      'https://morning-glade-dd57.dkellykennedy.workers.dev/quote?ticker=' + COMPANY_TICKER
+    );
+    const data = await res.json();
+    const meta = data.chart.result[0].meta;
+    const price = meta.regularMarketPrice;
+    const prev = meta.chartPreviousClose || meta.previousClose;
+    const change = price - prev;
+    const pct = (change / prev * 100);
+    const up = change >= 0;
+    document.getElementById('spPrice').textContent = '$' + price.toFixed(2);
+    const deltaEl = document.getElementById('spDelta');
+    deltaEl.textContent = (up ? '▲ +' : '▼ ') + Math.abs(change).toFixed(2) + ' (' + (up ? '+' : '') + pct.toFixed(2) + '%)';
+    deltaEl.className = 'sp-delta ' + (up ? 'pos' : 'neg');
+  } catch(e) {
+    document.getElementById('spPrice').textContent = COMPANY_TICKER;
+    document.getElementById('spDelta').textContent = 'quote unavailable';
+  }
+}
+
+// ─── ALFRED VIDEO ─────────────────────────────────────────────────────────────
+function playAlfredVideo() {
+  const video = document.getElementById('alfredVideo');
+  const still = document.getElementById('alfredStill');
+  const btn = document.getElementById('alfredPlayBtn');
+  const pulse = document.getElementById('alfredPulse');
+  still.classList.add('hidden');
+  pulse.style.display = 'none';
+  btn.classList.add('playing');
+  video.play();
+  video.onended = function() {
+    still.classList.remove('hidden');
+    btn.classList.remove('playing');
+    btn.textContent = '▶ Play Again';
+    pulse.style.display = 'none';
+  };
+}
+
+function dismissAlfred() {
+  const el = document.getElementById('alfredIntro');
+  el.style.animation = 'none';
+  el.style.transition = 'opacity .3s, transform .3s';
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  setTimeout(() => { el.style.display = 'none'; }, 300);
+}
+
+// Auto-play after 1.5s delay (gives page time to load, respects user attention)
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    const video = document.getElementById('alfredVideo');
+    // Try autoplay muted first — if allowed, unmute after
+    video.muted = true;
+    video.play().then(function() {
+      // Autoplay worked — unmute and show as playing
+      video.muted = false;
+      document.getElementById('alfredStill').classList.add('hidden');
+      document.getElementById('alfredPlayBtn').classList.add('playing');
+      document.getElementById('alfredPulse').style.display = 'none';
+      video.onended = function() {
+        document.getElementById('alfredStill').classList.remove('hidden');
+        const btn = document.getElementById('alfredPlayBtn');
+        btn.classList.remove('playing');
+        btn.textContent = '▶ Play Again';
+      };
+    }).catch(function() {
+      // Autoplay blocked — show Meet Alfred button
+      video.muted = false;
+    });
+  }, 1500);
+});
+
+// ─── TRANSLATIONS ───────────────────────────────────────────────────────────
+const T = {
+  en: {
+    brandName:'Alfred', brandSub:'Investor Relations Agent',
+    liveBadge:'Live · Web Search Active',
+    snapshotLabel:'Company Snapshot', founded:'Founded', hq:'HQ',
+    ipoDate:'Jan 22, 2026', ipoPrice:'IPO Price', marketCap:'Market Cap',
+    clients:'Clients', clientsVal:'4,600+ institutions',
+    charter:'OCC Charter', charterVal:'National Trust Bank',
+    financialsLabel:'Key Financials', fy24rev:'FY2024 Rev', fy24ni:'FY2024 NI',
+    strong:'▲ strong', custodyShare:'Custody Share',
+    prLabel:'Load Press Release', prAdd:'+ Add Press Release',
+    prSub:'Alfred answers investor questions directly from it',
+    prPlaceholder:'Paste press release text here...',
+    prLoadBtn:'Load into Alfred →',
+    filingsLabel:'SEC Filings',
+    filing1:'IPO Registration', filing2:'IPO Pricing',
+    filing3:'NYSE Listing', filing4:'Annual Report FY2024', filing4date:'Mar 2026',
+    chatTitle:'Alfred — BitGo IR Concierge', onlineStatus:'Online · Web Search Active',
+    searching:'Alfred is searching the web...',
+    sugg1:'What does BitGo do?', sugg2:'Tell me about the IPO',
+    sugg3:"What is BitGo's revenue?", sugg4:'Any recent BitGo news?',
+    sugg5:'Latest BTGO stock news?', sugg6:'Explain the custody model',
+    sugg7:'Your stock is a disaster, I lost everything!',
+    inputPlaceholder:'Ask Alfred any investor question about BitGo…',
+    sendBtn:'Ask Alfred',
+    calLabel:'IR Calendar', apr:'Apr', may:'May', jun:'Jun', jul:'Jul',
+    cal1:'Q1 2026 Earnings', cal1det:'Webcast · 9:00 AM ET',
+    cal2:'Consensus Crypto Conf.', cal2det:'CEO Presenting',
+    cal3:'Annual Shareholders Meeting', cal3det:'Palo Alto · 10:00 AM PT',
+    cal4:'Q2 2026 Earnings', cal4det:'Webcast · 9:00 AM ET',
+    analystLabel:'Analyst Coverage', activityLabel:'Activity Feed',
+    noActivity:'No activity yet',
+    disclaimer:'Alfred provides publicly available information only. Not investment advice. Always review official SEC filings at sec.gov.',
+    modalEyebrow:'Identity Verification Required', modalTitle:'Schedule IR Callback',
+    modalSub:"To connect with BitGo's IR team, we need to verify your identity.",
+    fieldName:'Full Name *', fieldEmail:'Professional Email *',
+    fieldInst:'Institution / Fund *', fieldPhone:'Phone (optional)',
+    fieldTime:'Preferred Time', phonePlaceholder:'For faster callback',
+    timePlaceholder:'e.g. Tuesday 2-4pm ET',
+    errName:'Please enter your name', errEmail:'Please enter a valid email',
+    errInst:'Please enter your institution',
+    cancelBtn:'Cancel', verifyBtn:'Verify & Request Callback',
+    modalNote:'Your information is used solely to facilitate this IR conversation.',
+    welcomeMsg:"Good day, and welcome to **BitGo Holdings Investor Relations**.\n\nI'm Alfred, your dedicated IR agent for BitGo (NYSE: BTGO). I'm fully briefed on BitGo's IPO, financials, custody business, and OCC charter — and I have access to live web search for current news and market developments.\n\nHow may I assist you today? [Source: BitGo IR · Alfred Agent · Live Search Active]",
+    langBannerText:'We detected your browser language. Would you like to view this page in English?',
+    langBannerAccept:'Switch to English', langBannerDismiss:'Stay in current language',
+    distressedLabel:'⚠ Distressed Investor', trollLabel:'◈ Input Filtered',
+    verifiedLabel:'✓ Identity Verified', prLoadedLabel:'📄 Press Release Loaded',
+    searchedLabel:'🌐 Live Web Search Used',
+    distressedBar:'⚠ Distressed investor detected — empathy mode active.',
+    trollBar:'◈ Low-quality input filtered.',
+    cbTitle:'Schedule an IR Conversation',
+    cbSub:"Connect directly with BitGo's Investor Relations team.",
+    cbBtn:'Verify Identity & Request Callback →',
+    verifiedReply:'Very good, {name}. Your callback request has been submitted. A member of BitGo\'s Investor Relations team will be in touch at {email} within one business day.\n\nIs there anything else I can assist you with in the meantime? [Source: IR Team Scheduling]',
+    apiError:"My apologies, sir — I am having difficulty connecting. Please try again or reach us at ir@bitgo.com.",
+    techError:'My apologies — I encountered a technical difficulty. Please try again or contact ir@bitgo.com.',
+  },
+  zh: {
+    brandName:'Alfred', brandSub:'投资者关系助手',
+    liveBadge:'实时 · 网络搜索已启用',
+    snapshotLabel:'公司概览', founded:'成立年份', hq:'总部',
+    ipoDate:'2026年1月22日', ipoPrice:'IPO价格', marketCap:'市值',
+    clients:'客户', clientsVal:'4,600+ 机构',
+    charter:'OCC牌照', charterVal:'国家信托银行',
+    financialsLabel:'核心财务数据', fy24rev:'2024年全年营收', fy24ni:'2024年全年净利润',
+    strong:'▲ 强劲', custodyShare:'托管市场份额',
+    prLabel:'加载新闻稿', prAdd:'+ 添加新闻稿',
+    prSub:'Alfred将直接根据新闻稿回答投资者问题',
+    prPlaceholder:'在此粘贴新闻稿文本...', prLoadBtn:'加载至Alfred →',
+    filingsLabel:'SEC文件',
+    filing1:'IPO注册', filing2:'IPO定价',
+    filing3:'纽交所上市', filing4:'2024年度报告', filing4date:'2026年3月',
+    chatTitle:'Alfred — BitGo投资者关系助手', onlineStatus:'在线 · 网络搜索已启用',
+    searching:'Alfred正在搜索网络...',
+    sugg1:'BitGo是做什么的？', sugg2:'介绍一下IPO情况',
+    sugg3:'BitGo的营收是多少？', sugg4:'BitGo近期有什么新闻？',
+    sugg5:'BTGO最新股票动态？', sugg6:'解释一下托管模式',
+    sugg7:'你们的股票太糟糕了，我损失了一切！',
+    inputPlaceholder:'向Alfred提问关于BitGo的任何投资者问题…',
+    sendBtn:'提问Alfred',
+    calLabel:'IR日历', apr:'4月', may:'5月', jun:'6月', jul:'7月',
+    cal1:'2026年一季度财报', cal1det:'网络直播 · 美东时间上午9:00',
+    cal2:'Consensus加密会议', cal2det:'CEO出席演讲',
+    cal3:'年度股东大会', cal3det:'帕洛阿尔托 · 太平洋时间上午10:00',
+    cal4:'2026年二季度财报', cal4det:'网络直播 · 美东时间上午9:00',
+    analystLabel:'分析师覆盖', activityLabel:'活动记录',
+    noActivity:'暂无活动',
+    disclaimer:'Alfred仅提供公开信息，不构成投资建议。请在sec.gov查阅官方SEC文件。',
+    modalEyebrow:'需要身份验证', modalTitle:'安排IR回访',
+    modalSub:'要与BitGo的IR团队联系，我们需要验证您的身份。',
+    fieldName:'全名 *', fieldEmail:'职业邮箱 *',
+    fieldInst:'机构/基金 *', fieldPhone:'电话（可选）',
+    fieldTime:'首选时间', phonePlaceholder:'以便更快回访',
+    timePlaceholder:'例如：周二下午2-4点（美东时间）',
+    errName:'请输入您的姓名', errEmail:'请输入有效的邮箱地址',
+    errInst:'请输入您的机构名称',
+    cancelBtn:'取消', verifyBtn:'验证并申请回访',
+    modalNote:'您的信息仅用于促进此次IR沟通。',
+    welcomeMsg:"您好，欢迎访问**BitGo Holdings投资者关系**页面。\n\n我是Alfred，BitGo（纽交所：BTGO）的专属IR助手。我已全面了解BitGo的IPO、财务状况、托管业务及OCC牌照——并可实时搜索最新新闻和市场动态。\n\n请问有什么可以为您效劳？ [来源: BitGo IR · Alfred助手 · 实时搜索]",
+    langBannerText:'检测到您的浏览器语言为中文。是否切换至中文版？',
+    langBannerAccept:'切换至中文', langBannerDismiss:'保持当前语言',
+    distressedLabel:'⚠ 困扰投资者', trollLabel:'◈ 输入已过滤',
+    verifiedLabel:'✓ 身份已验证', prLoadedLabel:'📄 新闻稿已加载',
+    searchedLabel:'🌐 已使用实时网络搜索',
+    distressedBar:'⚠ 检测到困扰投资者 — 已启用同理心模式。',
+    trollBar:'◈ 低质量输入已过滤。',
+    cbTitle:'安排IR沟通', cbSub:'直接与BitGo投资者关系团队联系。',
+    cbBtn:'验证身份并申请回访 →',
+    verifiedReply:'{name}您好，您的回访请求已提交。BitGo投资者关系团队将在一个工作日内通过{email}与您联系。\n\n请问还有什么可以协助您的？ [来源: IR团队调度]',
+    apiError:'非常抱歉 — 连接出现问题，请重试或发邮件至ir@bitgo.com。',
+    techError:'非常抱歉 — 遇到技术问题，请重试或联系ir@bitgo.com。',
+  },
+  es: {
+    brandName:'Alfred', brandSub:'Agente de Relaciones con Inversores',
+    liveBadge:'En vivo · Búsqueda web activa',
+    snapshotLabel:'Resumen de la empresa', founded:'Fundada', hq:'Sede',
+    ipoDate:'22 ene. 2026', ipoPrice:'Precio de OPV', marketCap:'Cap. bursátil',
+    clients:'Clientes', clientsVal:'4,600+ instituciones',
+    charter:'Licencia OCC', charterVal:'Banco fiduciario nacional',
+    financialsLabel:'Datos financieros clave', fy24rev:'Ingresos 2024', fy24ni:'Beneficio neto 2024',
+    strong:'▲ sólido', custodyShare:'Cuota de custodia',
+    prLabel:'Cargar nota de prensa', prAdd:'+ Añadir nota de prensa',
+    prSub:'Alfred responde preguntas directamente desde ella',
+    prPlaceholder:'Pegue el texto de la nota de prensa aquí...', prLoadBtn:'Cargar en Alfred →',
+    filingsLabel:'Registros SEC',
+    filing1:'Registro OPV', filing2:'Precio OPV',
+    filing3:'Cotización NYSE', filing4:'Informe anual 2024', filing4date:'Mar. 2026',
+    chatTitle:'Alfred — Concierge de RI de BitGo', onlineStatus:'En línea · Búsqueda web activa',
+    searching:'Alfred está buscando en la web...',
+    sugg1:'¿Qué hace BitGo?', sugg2:'Cuéntame sobre la OPV',
+    sugg3:'¿Cuáles son los ingresos de BitGo?', sugg4:'¿Noticias recientes de BitGo?',
+    sugg5:'¿Últimas noticias de la acción BTGO?', sugg6:'Explica el modelo de custodia',
+    sugg7:'¡Sus acciones son un desastre, lo perdí todo!',
+    inputPlaceholder:'Pregúntele a Alfred cualquier cosa sobre BitGo…',
+    sendBtn:'Preguntar a Alfred',
+    calLabel:'Calendario RI', apr:'Abr', may:'May', jun:'Jun', jul:'Jul',
+    cal1:'Resultados T1 2026', cal1det:'Webcast · 9:00 h ET',
+    cal2:'Consensus Crypto Conf.', cal2det:'Presentación del CEO',
+    cal3:'Junta de accionistas anual', cal3det:'Palo Alto · 10:00 h PT',
+    cal4:'Resultados T2 2026', cal4det:'Webcast · 9:00 h ET',
+    analystLabel:'Cobertura analista', activityLabel:'Registro de actividad',
+    noActivity:'Sin actividad todavía',
+    disclaimer:'Alfred proporciona solo información pública. No es asesoramiento de inversión. Consulte siempre los registros oficiales en sec.gov.',
+    modalEyebrow:'Verificación de identidad requerida', modalTitle:'Programar llamada de RI',
+    modalSub:'Para conectar con el equipo de RI de BitGo, necesitamos verificar su identidad.',
+    fieldName:'Nombre completo *', fieldEmail:'Correo profesional *',
+    fieldInst:'Institución / Fondo *', fieldPhone:'Teléfono (opcional)',
+    fieldTime:'Horario preferido', phonePlaceholder:'Para una respuesta más rápida',
+    timePlaceholder:'Ej. martes 14:00-16:00 ET',
+    errName:'Ingrese su nombre', errEmail:'Ingrese un correo válido',
+    errInst:'Ingrese su institución',
+    cancelBtn:'Cancelar', verifyBtn:'Verificar y solicitar llamada',
+    modalNote:'Su información se usa únicamente para facilitar esta conversación con RI.',
+    welcomeMsg:"Buen día y bienvenido a **BitGo Holdings Relaciones con Inversores**.\n\nSoy Alfred, su agente de RI dedicado para BitGo (NYSE: BTGO). Estoy completamente informado sobre la OPV, finanzas, negocio de custodia y licencia OCC de BitGo, y tengo acceso a búsqueda web en vivo.\n\n¿En qué puedo ayudarle hoy? [Fuente: BitGo IR · Agente Alfred · Búsqueda activa]",
+    langBannerText:'Detectamos que su idioma es español. ¿Desea ver esta página en español?',
+    langBannerAccept:'Cambiar a español', langBannerDismiss:'Mantener idioma actual',
+    distressedLabel:'⚠ Inversor angustiado', trollLabel:'◈ Entrada filtrada',
+    verifiedLabel:'✓ Identidad verificada', prLoadedLabel:'📄 Nota de prensa cargada',
+    searchedLabel:'🌐 Búsqueda web en vivo usada',
+    distressedBar:'⚠ Inversor angustiado detectado — modo empatía activo.',
+    trollBar:'◈ Entrada de baja calidad filtrada.',
+    cbTitle:'Programar conversación con RI', cbSub:'Conéctese directamente con el equipo de RI de BitGo.',
+    cbBtn:'Verificar identidad y solicitar llamada →',
+    verifiedReply:'Muy bien, {name}. Su solicitud de llamada ha sido enviada. Un miembro del equipo de RI de BitGo se pondrá en contacto con usted en {email} en un día hábil.\n\n¿Hay algo más en lo que pueda ayudarle? [Fuente: Agenda del equipo de RI]',
+    apiError:'Mis disculpas — tengo dificultades de conexión. Inténtelo de nuevo o escríbanos a ir@bitgo.com.',
+    techError:'Mis disculpas — encontré una dificultad técnica. Inténtelo de nuevo o contacte ir@bitgo.com.',
+  },
+  ja: {
+    brandName:'Alfred', brandSub:'IR（投資家向け広報）エージェント',
+    liveBadge:'ライブ · ウェブ検索有効',
+    snapshotLabel:'会社概要', founded:'設立', hq:'本社',
+    ipoDate:'2026年1月22日', ipoPrice:'IPO価格', marketCap:'時価総額',
+    clients:'顧客', clientsVal:'4,600社以上の機関投資家',
+    charter:'OCCチャーター', charterVal:'国立信託銀行',
+    financialsLabel:'主要財務データ', fy24rev:'FY2024売上高', fy24ni:'FY2024純利益',
+    strong:'▲ 好調', custodyShare:'カストディシェア',
+    prLabel:'プレスリリースを読み込む', prAdd:'+ プレスリリースを追加',
+    prSub:'Alfredがプレスリリースから直接質問に回答します',
+    prPlaceholder:'プレスリリースのテキストをここに貼り付けてください...', prLoadBtn:'Alfredに読み込む →',
+    filingsLabel:'SEC開示資料',
+    filing1:'IPO登録届出書', filing2:'IPO価格設定',
+    filing3:'NYSE上場', filing4:'FY2024年次報告書', filing4date:'2026年3月',
+    chatTitle:'Alfred — BitGo IRコンシェルジュ', onlineStatus:'オンライン · ウェブ検索有効',
+    searching:'Alfredがウェブを検索中...',
+    sugg1:'BitGoとは何をする会社ですか？', sugg2:'IPOについて教えてください',
+    sugg3:'BitGoの売上高はいくらですか？', sugg4:'BitGoの最新ニュースは？',
+    sugg5:'BTGOの最新株価ニュースは？', sugg6:'カストディモデルを説明してください',
+    sugg7:'株価が酷すぎる、全部失った！',
+    inputPlaceholder:'BitGoについて投資家として質問してください…',
+    sendBtn:'Alfred に質問',
+    calLabel:'IRカレンダー', apr:'4月', may:'5月', jun:'6月', jul:'7月',
+    cal1:'2026年Q1決算発表', cal1det:'ウェビナー · 午前9時（ET）',
+    cal2:'Consensus暗号通貨会議', cal2det:'CEO登壇',
+    cal3:'年次株主総会', cal3det:'パロアルト · 午前10時（PT）',
+    cal4:'2026年Q2決算発表', cal4det:'ウェビナー · 午前9時（ET）',
+    analystLabel:'アナリストカバレッジ', activityLabel:'アクティビティ',
+    noActivity:'まだアクティビティはありません',
+    disclaimer:'Alfredは公開情報のみを提供します。投資アドバイスではありません。必ずsec.govで公式SEC開示資料をご確認ください。',
+    modalEyebrow:'本人確認が必要です', modalTitle:'IR折り返し連絡のご予約',
+    modalSub:'BitGoのIRチームとつながるために、本人確認が必要です。',
+    fieldName:'氏名 *', fieldEmail:'ビジネスメール *',
+    fieldInst:'機関名/ファンド名 *', fieldPhone:'電話番号（任意）',
+    fieldTime:'希望連絡時間', phonePlaceholder:'迅速な折り返しのため',
+    timePlaceholder:'例：火曜日 14:00-16:00 ET',
+    errName:'お名前を入力してください', errEmail:'有効なメールアドレスを入力してください',
+    errInst:'機関名を入力してください',
+    cancelBtn:'キャンセル', verifyBtn:'確認して折り返しを依頼',
+    modalNote:'お客様の情報はIR対応のためのみに使用されます。',
+    welcomeMsg:"こんにちは。**BitGo Holdings 投資家向け広報**へようこそ。\n\n私はAlfred、BitGo（NYSE：BTGO）専任のIRエージェントです。BitGoのIPO、財務状況、カストディビジネス、OCCチャーターについて詳しく把握しており、最新ニュースや市場動向のリアルタイム検索も可能です。\n\n本日はどのようなご質問でしょうか？ [出典: BitGo IR · Alfredエージェント · ライブ検索]",
+    langBannerText:'ブラウザの言語が日本語と検出されました。日本語でご覧になりますか？',
+    langBannerAccept:'日本語に切り替える', langBannerDismiss:'現在の言語を維持',
+    distressedLabel:'⚠ 不満を持つ投資家', trollLabel:'◈ 入力をフィルタリング',
+    verifiedLabel:'✓ 本人確認済み', prLoadedLabel:'📄 プレスリリース読み込み済み',
+    searchedLabel:'🌐 ライブウェブ検索使用',
+    distressedBar:'⚠ 不満を持つ投資家を検出 — 共感モード有効。',
+    trollBar:'◈ 低品質入力をフィルタリングしました。',
+    cbTitle:'IRとの対話をご予約', cbSub:'BitGoのIRチームと直接つながります。',
+    cbBtn:'本人確認して折り返しを依頼 →',
+    verifiedReply:'{name}様、折り返し連絡のご依頼を承りました。BitGo IRチームより1営業日以内に{email}宛てにご連絡いたします。\n\n他にご質問はございますか？ [出典: IRチームスケジュール]',
+    apiError:'大変申し訳ございません — 接続に問題が発生しています。再試行するか、ir@bitgo.comまでご連絡ください。',
+    techError:'大変申し訳ございません — 技術的な問題が発生しました。再試行するか、ir@bitgo.comまでご連絡ください。',
+  },
+  ko: {
+    brandName:'Alfred', brandSub:'투자자 관계(IR) 에이전트',
+    liveBadge:'라이브 · 웹 검색 활성',
+    snapshotLabel:'회사 개요', founded:'설립', hq:'본사',
+    ipoDate:'2026년 1월 22일', ipoPrice:'IPO 가격', marketCap:'시가총액',
+    clients:'고객', clientsVal:'4,600개 이상의 기관',
+    charter:'OCC 인가', charterVal:'국립 신탁 은행',
+    financialsLabel:'핵심 재무 데이터', fy24rev:'FY2024 매출', fy24ni:'FY2024 순이익',
+    strong:'▲ 견조', custodyShare:'수탁 시장 점유율',
+    prLabel:'보도자료 불러오기', prAdd:'+ 보도자료 추가',
+    prSub:'Alfred가 보도자료를 기반으로 투자자 질문에 답합니다',
+    prPlaceholder:'여기에 보도자료 텍스트를 붙여넣으세요...', prLoadBtn:'Alfred에 불러오기 →',
+    filingsLabel:'SEC 공시',
+    filing1:'IPO 등록신고서', filing2:'IPO 가격 결정',
+    filing3:'NYSE 상장', filing4:'FY2024 연간 보고서', filing4date:'2026년 3월',
+    chatTitle:'Alfred — BitGo IR 컨시어지', onlineStatus:'온라인 · 웹 검색 활성',
+    searching:'Alfred가 웹을 검색 중...',
+    sugg1:'BitGo는 무슨 회사인가요?', sugg2:'IPO에 대해 알려주세요',
+    sugg3:'BitGo의 매출은 얼마인가요?', sugg4:'BitGo 최신 뉴스는?',
+    sugg5:'BTGO 최신 주가 뉴스는?', sugg6:'수탁 모델을 설명해 주세요',
+    sugg7:'주가가 최악이에요, 다 잃었어요!',
+    inputPlaceholder:'BitGo에 관한 투자자 질문을 Alfred에게 물어보세요…',
+    sendBtn:'Alfred에게 질문',
+    calLabel:'IR 캘린더', apr:'4월', may:'5월', jun:'6월', jul:'7월',
+    cal1:'2026년 Q1 실적 발표', cal1det:'웨비나 · 오전 9시 ET',
+    cal2:'Consensus 크립토 컨퍼런스', cal2det:'CEO 발표',
+    cal3:'연간 주주총회', cal3det:'팰로앨토 · 오전 10시 PT',
+    cal4:'2026년 Q2 실적 발표', cal4det:'웨비나 · 오전 9시 ET',
+    analystLabel:'애널리스트 커버리지', activityLabel:'활동 피드',
+    noActivity:'아직 활동 없음',
+    disclaimer:'Alfred는 공개 정보만 제공합니다. 투자 조언이 아닙니다. 공식 SEC 공시는 sec.gov에서 확인하세요.',
+    modalEyebrow:'신원 확인 필요', modalTitle:'IR 콜백 예약',
+    modalSub:'BitGo IR 팀과 연결하려면 신원 확인이 필요합니다.',
+    fieldName:'성명 *', fieldEmail:'업무용 이메일 *',
+    fieldInst:'기관/펀드 *', fieldPhone:'전화번호 (선택)',
+    fieldTime:'선호 시간', phonePlaceholder:'신속한 연락을 위해',
+    timePlaceholder:'예: 화요일 오후 2-4시 ET',
+    errName:'이름을 입력해 주세요', errEmail:'유효한 이메일을 입력해 주세요',
+    errInst:'기관명을 입력해 주세요',
+    cancelBtn:'취소', verifyBtn:'확인 후 콜백 요청',
+    modalNote:'귀하의 정보는 이 IR 대화 진행을 위해서만 사용됩니다.',
+    welcomeMsg:"안녕하세요, **BitGo Holdings 투자자 관계** 페이지에 오신 것을 환영합니다.\n\n저는 Alfred입니다. BitGo(NYSE: BTGO)의 전담 IR 에이전트로, IPO, 재무 현황, 수탁 사업, OCC 인가에 대해 완벽히 숙지하고 있으며 실시간 웹 검색을 통해 최신 뉴스와 시장 동향을 파악할 수 있습니다.\n\n오늘 어떻게 도와드릴까요? [출처: BitGo IR · Alfred 에이전트 · 실시간 검색]",
+    langBannerText:'브라우저 언어가 한국어로 감지되었습니다. 한국어로 보시겠습니까?',
+    langBannerAccept:'한국어로 전환', langBannerDismiss:'현재 언어 유지',
+    distressedLabel:'⚠ 불만 투자자', trollLabel:'◈ 입력 필터링됨',
+    verifiedLabel:'✓ 신원 확인됨', prLoadedLabel:'📄 보도자료 로드됨',
+    searchedLabel:'🌐 실시간 웹 검색 사용',
+    distressedBar:'⚠ 불만 투자자 감지 — 공감 모드 활성.',
+    trollBar:'◈ 저품질 입력이 필터링되었습니다.',
+    cbTitle:'IR 대화 예약', cbSub:'BitGo IR 팀과 직접 연결됩니다.',
+    cbBtn:'신원 확인 후 콜백 요청 →',
+    verifiedReply:'{name}님, 콜백 요청이 접수되었습니다. BitGo IR 팀에서 영업일 기준 1일 이내에 {email}로 연락드릴 것입니다.\n\n더 도움이 필요하신 것이 있으신가요? [출처: IR 팀 일정]',
+    apiError:'죄송합니다 — 연결에 어려움이 있습니다. 다시 시도하거나 ir@bitgo.com으로 문의해 주세요.',
+    techError:'죄송합니다 — 기술적인 문제가 발생했습니다. 다시 시도하거나 ir@bitgo.com으로 문의해 주세요.',
+  },
+  fa: {
+    brandName:'Alfred', brandSub:'نماینده روابط سرمایه‌گذاران',
+    liveBadge:'زنده · جستجوی وب فعال',
+    snapshotLabel:'خلاصه شرکت', founded:'تاسیس', hq:'دفتر مرکزی',
+    ipoDate:'۲۲ ژانویه ۲۰۲۶', ipoPrice:'قیمت عرضه اولیه', marketCap:'ارزش بازار',
+    clients:'مشتریان', clientsVal:'بیش از ۴٬۶۰۰ نهاد',
+    charter:'مجوز OCC', charterVal:'بانک امانت‌داری ملی',
+    financialsLabel:'داده‌های مالی کلیدی', fy24rev:'درآمد سال ۲۰۲۴', fy24ni:'سود خالص ۲۰۲۴',
+    strong:'▲ قوی', custodyShare:'سهم بازار حضانت',
+    prLabel:'بارگذاری بیانیه مطبوعاتی', prAdd:'+ افزودن بیانیه مطبوعاتی',
+    prSub:'Alfred مستقیماً از بیانیه به سوالات سرمایه‌گذاران پاسخ می‌دهد',
+    prPlaceholder:'متن بیانیه مطبوعاتی را اینجا بچسبانید...', prLoadBtn:'بارگذاری در Alfred →',
+    filingsLabel:'اسناد SEC',
+    filing1:'ثبت عرضه اولیه', filing2:'قیمت‌گذاری عرضه اولیه',
+    filing3:'ورود به بورس NYSE', filing4:'گزارش سالانه ۲۰۲۴', filing4date:'مارس ۲۰۲۶',
+    chatTitle:'Alfred — مشاور روابط سرمایه‌گذاران BitGo', onlineStatus:'آنلاین · جستجوی وب فعال',
+    searching:'Alfred در حال جستجوی وب است...',
+    sugg1:'BitGo چه کاری انجام می‌دهد؟', sugg2:'درباره عرضه اولیه توضیح دهید',
+    sugg3:'درآمد BitGo چقدر است؟', sugg4:'آخرین اخبار BitGo چیست؟',
+    sugg5:'آخرین اخبار سهام BTGO؟', sugg6:'مدل حضانت را توضیح دهید',
+    sugg7:'سهام شما فاجعه است، همه چیز را از دست دادم!',
+    inputPlaceholder:'هر سوالی درباره BitGo از Alfred بپرسید…',
+    sendBtn:'پرسش از Alfred',
+    calLabel:'تقویم روابط سرمایه‌گذاران', apr:'آوریل', may:'مه', jun:'ژوئن', jul:'ژوئیه',
+    cal1:'گزارش Q1 2026', cal1det:'وبیناری · ساعت ۹ صبح ET',
+    cal2:'کنفرانس Consensus Crypto', cal2det:'ارائه مدیرعامل',
+    cal3:'مجمع سالانه سهامداران', cal3det:'پالو آلتو · ساعت ۱۰ صبح PT',
+    cal4:'گزارش Q2 2026', cal4det:'وبیناری · ساعت ۹ صبح ET',
+    analystLabel:'پوشش تحلیلگران', activityLabel:'فعالیت‌ها',
+    noActivity:'هنوز فعالیتی ثبت نشده',
+    disclaimer:'Alfred فقط اطلاعات عمومی ارائه می‌دهد. این مشاوره سرمایه‌گذاری نیست. همیشه اسناد رسمی SEC را در sec.gov بررسی کنید.',
+    modalEyebrow:'تأیید هویت الزامی است', modalTitle:'زمان‌بندی تماس روابط سرمایه‌گذاران',
+    modalSub:'برای ارتباط با تیم روابط سرمایه‌گذاران BitGo، باید هویت شما تأیید شود.',
+    fieldName:'نام کامل *', fieldEmail:'ایمیل حرفه‌ای *',
+    fieldInst:'نهاد / صندوق *', fieldPhone:'تلفن (اختیاری)',
+    fieldTime:'زمان مناسب', phonePlaceholder:'برای تماس سریع‌تر',
+    timePlaceholder:'مثال: سه‌شنبه ساعت ۲ تا ۴ بعدازظهر ET',
+    errName:'لطفاً نام خود را وارد کنید', errEmail:'لطفاً ایمیل معتبر وارد کنید',
+    errInst:'لطفاً نام نهاد خود را وارد کنید',
+    cancelBtn:'لغو', verifyBtn:'تأیید و درخواست تماس',
+    modalNote:'اطلاعات شما فقط برای تسهیل این مکالمه روابط سرمایه‌گذاران استفاده می‌شود.',
+    welcomeMsg:"سلام و خوش آمدید به **روابط سرمایه‌گذاران BitGo Holdings**.\n\nمن Alfred هستم، نماینده اختصاصی روابط سرمایه‌گذاران BitGo (NYSE: BTGO). از عرضه اولیه، وضعیت مالی، کسب‌وکار حضانت و مجوز OCC مطلعم و به جستجوی وب زنده دسترسی دارم.\n\nامروز چطور می‌توانم کمکتان کنم؟ [منبع: BitGo IR · عامل Alfred · جستجوی زنده]",
+    langBannerText:'زبان مرورگر شما فارسی تشخیص داده شد. آیا می‌خواهید این صفحه را به فارسی ببینید؟',
+    langBannerAccept:'تغییر به فارسی', langBannerDismiss:'ادامه با زبان فعلی',
+    distressedLabel:'⚠ سرمایه‌گذار ناراحت', trollLabel:'◈ ورودی فیلتر شد',
+    verifiedLabel:'✓ هویت تأیید شد', prLoadedLabel:'📄 بیانیه بارگذاری شد',
+    searchedLabel:'🌐 جستجوی وب زنده استفاده شد',
+    distressedBar:'⚠ سرمایه‌گذار ناراحت شناسایی شد — حالت همدلی فعال.',
+    trollBar:'◈ ورودی بی‌کیفیت فیلتر شد.',
+    cbTitle:'زمان‌بندی مکالمه با روابط سرمایه‌گذاران', cbSub:'مستقیماً با تیم روابط سرمایه‌گذاران BitGo ارتباط برقرار کنید.',
+    cbBtn:'تأیید هویت و درخواست تماس →',
+    verifiedReply:'{name} عزیز، درخواست تماس شما ثبت شد. تیم روابط سرمایه‌گذاران BitGo ظرف یک روز کاری با {email} تماس خواهد گرفت.\n\nآیا می‌توانم در چیز دیگری کمکتان کنم؟ [منبع: زمان‌بندی تیم روابط سرمایه‌گذاران]',
+    apiError:'با عرض پوزش — مشکل اتصال دارم. لطفاً دوباره امتحان کنید یا با ir@bitgo.com تماس بگیرید.',
+    techError:'با عرض پوزش — مشکل فنی پیش آمد. لطفاً دوباره امتحان کنید یا با ir@bitgo.com تماس بگیرید.',
+  }
+};
+
+// ─── LANGUAGE ENGINE ─────────────────────────────────────────────────────────
+let currentLang = 'en';
+const RTL_LANGS = ['fa'];
+
+// Browser language detection map
+const BROWSER_LANG_MAP = {
+  'zh':'zh','zh-CN':'zh','zh-TW':'zh','zh-HK':'zh',
+  'es':'es','es-ES':'es','es-MX':'es','es-AR':'es','es-419':'es',
+  'ja':'ja','ko':'ko',
+  'fa':'fa','fa-IR':'fa','fa-AF':'fa',
+};
+
+function detectBrowserLang() {
+  const langs = navigator.languages || [navigator.language || navigator.userLanguage || 'en'];
+  for (const l of langs) {
+    if (BROWSER_LANG_MAP[l]) return BROWSER_LANG_MAP[l];
+    const base = l.split('-')[0];
+    if (BROWSER_LANG_MAP[base]) return BROWSER_LANG_MAP[base];
+  }
+  return null;
+}
+
+function applyLang(lang) {
+  const t = T[lang] || T.en;
+  currentLang = lang;
+
+  // RTL support
+  document.documentElement.dir = RTL_LANGS.includes(lang) ? 'rtl' : 'ltr';
+
+  // Apply all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  // Apply placeholder translations
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+
+  // Apply suggestion button translations + data-q
+  document.querySelectorAll('[data-i18n-q]').forEach(el => {
+    const key = el.getAttribute('data-i18n-q');
+    if (t[key] !== undefined) {
+      el.textContent = t[key];
+      el.dataset.q = t[key];
+    }
+  });
+
+  // Update language button label
+  const labels = {en:'EN',zh:'中文',es:'ES',ja:'日本語',ko:'한국어',fa:'فا'};
+  document.getElementById('langBtnLabel').textContent = labels[lang] || 'EN';
+
+  // Mark active option
+  document.querySelectorAll('.lang-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.lang === lang);
+  });
+}
+
+function setLang(lang) {
+  applyLang(lang);
+  closeLangDropdown();
+  // If chat is empty, re-render welcome in new language
+  const msgs = document.getElementById('msgs');
+  if (msgs.children.length === 0) {
+    showWelcome();
+  }
+}
+
+function toggleLangDropdown() {
+  const btn = document.getElementById('langBtn');
+  const dd = document.getElementById('langDropdown');
+  btn.classList.toggle('open');
+  dd.classList.toggle('open');
+}
+
+function closeLangDropdown() {
+  document.getElementById('langBtn').classList.remove('open');
+  document.getElementById('langDropdown').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.lang-selector')) closeLangDropdown();
+});
+
+function showAutoBanner(detectedLang) {
+  const t = T[detectedLang];
+  document.getElementById('langBannerText').textContent = t.langBannerText;
+  document.getElementById('langBannerAccept').textContent = t.langBannerAccept;
+  document.getElementById('langBannerDismiss').textContent = t.langBannerDismiss;
+  document.getElementById('langBanner').classList.add('show');
+  // Store detected lang for accept button
+  document.getElementById('langBannerAccept').onclick = function() { setLang(detectedLang); dismissBanner(true); };
+}
+
+function dismissBanner(accepted) {
+  document.getElementById('langBanner').classList.remove('show');
+}
+
+// ─── PORTRAIT HANDLING ────────────────────────────────────────────────────────
+function handleImgError() {
+  document.getElementById('alfredImg').style.display = 'none';
+  document.getElementById('avFallback').style.display = 'block';
+}
+
+const ALFRED_SRC = 'alfred-portrait.png';
+
+function getAlfredAvHtml() {
+  const img = document.getElementById('alfredImg');
+  if (img && img.complete && img.naturalWidth > 0) {
+    return '<img src="' + ALFRED_SRC + '" alt="Alfred">';
+  }
+  return 'A';
+}
+
+// ─── CORE CHAT LOGIC ──────────────────────────────────────────────────────────
+const convHistory = [];
+let pressReleases = [];
+let isLoading = false;
+let logCount = 0;
+
+function t(key) { return (T[currentLang] || T.en)[key] || (T.en)[key] || ''; }
+
+function logEv(type, detail) {
+  logCount++;
+  const feed = document.getElementById('actFeed');
+  if (logCount === 1) feed.innerHTML = '';
+  const item = document.createElement('div');
+  item.className = 'act-item';
+  const colors = {angry:'#d47a85',troll:'#c9a84c',cb:'#6db87a',search:'#7aabe0',pr:'#7aabe0',info:'rgba(255,255,255,0.25)'};
+  const labels = {angry:'ANGRY',troll:'TROLL',cb:'CB',search:'SEARCH',pr:'PR',info:'INFO'};
+  item.innerHTML = '<span style="color:' + (colors[type]||colors.info) + ';font-size:9px;letter-spacing:.08em;">[' + (labels[type]||type.toUpperCase()) + ']</span> ' + detail.slice(0,42);
+  feed.insertBefore(item, feed.firstChild);
+}
+
+function togglePR() {
+  const ta = document.getElementById('prTextarea');
+  const btn = document.getElementById('btnLoadPR');
+  const visible = ta.style.display === 'block';
+  ta.style.display = visible ? 'none' : 'block';
+  btn.style.display = visible ? 'none' : 'block';
+  if (!visible) ta.focus();
+}
+
+function loadPR() {
+  const ta = document.getElementById('prTextarea');
+  const text = ta.value.trim();
+  if (!text) return;
+  const title = text.slice(0,55).replace(/\n/g,' ') + (text.length > 55 ? '…' : '');
+  pressReleases.push({title, text});
+  const list = document.getElementById('prList');
+  const idx = pressReleases.length - 1;
+  const tag = document.createElement('div');
+  tag.className = 'pr-tag';
+  tag.innerHTML = '<span>📄 ' + title + '</span><button onclick="removePR(' + idx + ')">✕</button>';
+  list.appendChild(tag);
+  ta.value = ''; ta.style.display = 'none';
+  document.getElementById('btnLoadPR').style.display = 'none';
+  logEv('pr', 'Loaded: "' + title + '"');
+  addMsg('alfred', 'I have loaded that press release into my briefing, sir. Ready to answer investor questions about it. [Source: Press Release — Loaded]', false, 'pr');
+}
+
+function removePR(idx) {
+  pressReleases.splice(idx, 1);
+  document.getElementById('prList').innerHTML = '';
+  pressReleases.forEach(function(pr, i) {
+    const tag = document.createElement('div');
+    tag.className = 'pr-tag';
+    tag.innerHTML = '<span>📄 ' + pr.title + '</span><button onclick="removePR(' + i + ')">✕</button>';
+    document.getElementById('prList').appendChild(tag);
+  });
+}
+
+function buildSystem() {
+  const prSection = pressReleases.length > 0
+    ? '\n\nLOADED PRESS RELEASES — answer questions about these with precision:\n' + pressReleases.map((p,i) => '[PR '+(i+1)+']: '+p.text).join('\n\n---\n\n')
+    : '';
+  const langNote = currentLang !== 'en'
+    ? '\n\nIMPORTANT: The investor is viewing this page in ' + ({zh:'Chinese (Simplified)',es:'Spanish',ja:'Japanese',ko:'Korean',fa:'Farsi/Persian'}[currentLang]||'English') + '. Please respond in that language unless they write to you in English.'
+    : '';
+  return 'You are Alfred, BitGo\'s distinguished Investor Relations AI agent. You speak with precision, warmth, and the discretion of a seasoned IR professional. Occasionally use "sir" or appropriate honorifics to convey white-glove service.\n\nYou have ACCESS TO WEB SEARCH via the web_search tool. Use it proactively for current news about BitGo or BTGO stock, recent developments, and any question requiring up-to-date information.\n\nBITGO HOLDINGS (NYSE: BTGO) — CORE DATA:\n- Business: Digital asset infrastructure — custody, wallets, staking, trading, financing, settlement\n- Founded 2013 by Mike Belshe, Ben Davenport, Will O\'Brien, Bill Lee · HQ: Palo Alto, CA\n- IPO: January 22, 2026 · NYSE: BTGO · First crypto IPO of 2026 · $18.00/share · raised ~$212.8M\n- Current stock: ~$12.02 · Market cap: ~$1.26B · 116M shares outstanding\n- OCC Charter: First publicly traded, federally chartered digital asset trust bank\n- AUC: $104B+ (Sept 2025) · +96% YoY · Custody market share: 20-30%\n- Clients: 4,600+ institutions — pension funds, hedge funds, exchanges, banks\n- FY2024: Revenue $3.08B (+233% YoY), Net Income $156.6M\n- H1 2025: Revenue $4.19B (nearly 4x H1 2024), NI $12.6M\n- Revenue mix: >80% sticky recurring (custody, staking)\n- Competitors: Coinbase Custody, Gemini, Anchorage Digital, Fireblocks\n- Analyst targets: VanEck $21, H.C. Wainwright $20, Canaccord $19.50 (OWT), Compass Point $16 (Hold)' + prSection + langNote + '\n\nBEHAVIORAL RULES:\nRULE 1 — SENTIMENT: Analyze every message first.\n- Angry/distressed/profanity → empathy first, never defensive, offer callback → end: ##ANGRY##\n- Nonsense/troll/gibberish → polite redirect, no callback → end: ##TROLL##\n\nRULE 2 — WEB SEARCH: Use web_search for current news, stock developments, recent analyst notes. Tag results [Source: Live Web Search].\n\nRULE 3 — STANDARD: Answer from data above. Cite sources. 3-5 sentences.\n\nRULE 4 — PR: If PR loaded and question relates, answer from it. Tag [Source: Press Release].\n\nRULE 5 — CALLBACK: For M&A, multi-year guidance, roadshows, succession, activists → end: ##CALLBACK##\n\nRULE 6 — Never fabricate. If unknown, say so clearly.\n\nTone: Warm, precise, slightly formal. Never robotic.';
+}
+
+function openModal() {
+  document.getElementById('verifyModal').classList.add('open');
+  setTimeout(() => { document.getElementById('v-name').focus(); }, 100);
+}
+
+function closeModal() {
+  document.getElementById('verifyModal').classList.remove('open');
+}
+
+function submitVerify() {
+  const name = document.getElementById('v-name').value.trim();
+  const email = document.getElementById('v-email').value.trim();
+  const inst = document.getElementById('v-inst').value.trim();
+  let ok = true;
+  if (!name) { document.getElementById('v-name').classList.add('err'); document.getElementById('err-name').style.display='block'; ok=false; }
+  else { document.getElementById('v-name').classList.remove('err'); document.getElementById('err-name').style.display='none'; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('v-email').classList.add('err'); document.getElementById('err-email').style.display='block'; ok=false; }
+  else { document.getElementById('v-email').classList.remove('err'); document.getElementById('err-email').style.display='none'; }
+  if (!inst) { document.getElementById('v-inst').classList.add('err'); document.getElementById('err-inst').style.display='block'; ok=false; }
+  else { document.getElementById('v-inst').classList.remove('err'); document.getElementById('err-inst').style.display='none'; }
+  if (!ok) return;
+  closeModal();
+  logEv('cb', 'Verified: ' + name + ' · ' + inst);
+  const reply = t('verifiedReply').replace('{name}', name).replace('{email}', email);
+  addMsg('alfred', reply, false, 'verified');
+}
+
+function addMsg(role, content, showCB, flagType) {
+  showCB = showCB || false; flagType = flagType || null;
+  const c = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'msg ' + role;
+  const av = document.createElement('div');
+  av.className = 'av ' + role;
+  if (role === 'alfred') {
+    const img = document.getElementById('alfredImg');
+    const imgOk = img && img.complete && img.naturalWidth > 0;
+    av.innerHTML = imgOk ? '<img src="' + ALFRED_SRC + '" alt="Alfred">' : 'A';
+  } else {
+    av.textContent = 'YOU';
+  }
+  const bub = document.createElement('div');
+  bub.className = 'bub';
+  let html = '';
+  if (flagType === 'angry') html += '<div class="flag angry">' + t('distressedLabel') + '</div><br>';
+  else if (flagType === 'troll') html += '<div class="flag troll">' + t('trollLabel') + '</div><br>';
+  else if (flagType === 'verified') html += '<div class="flag verified">' + t('verifiedLabel') + '</div><br>';
+  else if (flagType === 'pr') html += '<div class="flag pr">' + t('prLoadedLabel') + '</div><br>';
+  else if (flagType === 'search') html += '<div class="flag search">' + t('searchedLabel') + '</div><br>';
+  html += content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  const srcMatch = html.match(/\[Source:(.*?)\]/i);
+  if (srcMatch) {
+    html = html.replace(/\[Source:(.*?)\]/gi, '');
+    const chips = srcMatch[1].split(',').map(s => {
+      const isWeb = s.toLowerCase().indexOf('web') > -1 || s.toLowerCase().indexOf('search') > -1;
+      return '<span class="sc' + (isWeb ? ' web' : '') + '">' + s.trim() + '</span>';
+    }).join('');
+    html += '<div class="src-chips">' + chips + '</div>';
+  }
+  if (showCB) {
+    html += '<div class="cb-card"><h4>' + t('cbTitle') + '</h4><p>' + t('cbSub') + '</p><button onclick="openModal()">' + t('cbBtn') + '</button></div>';
+  }
+  bub.innerHTML = html;
+  d.appendChild(av); d.appendChild(bub);
+  c.appendChild(d);
+  c.scrollTop = c.scrollHeight;
+}
+
+function showTyping() {
+  const c = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'msg alfred'; d.id = 'typing';
+  const av = document.createElement('div');
+  av.className = 'av alfred';
+  const img = document.getElementById('alfredImg');
+  av.innerHTML = (img && img.complete && img.naturalWidth > 0) ? '<img src="' + ALFRED_SRC + '" alt="Alfred">' : 'A';
+  const ti = document.createElement('div');
+  ti.className = 'typing';
+  ti.innerHTML = '<span></span><span></span><span></span>';
+  d.appendChild(av); d.appendChild(ti);
+  c.appendChild(d); c.scrollTop = c.scrollHeight;
+}
+
+function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+function showSearchStatus(msg) { document.getElementById('searchMsg').textContent = msg; document.getElementById('searchStatus').classList.add('visible'); }
+function hideSearchStatus() { document.getElementById('searchStatus').classList.remove('visible'); }
+
+function ask(q) {
+  document.getElementById('userInput').value = q;
+  send();
+}
+
+async function send() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+  input.value = ''; isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  addMsg('user', text);
+  convHistory.push({role:'user', content:text});
+  logEv('info', 'Q: "' + text.slice(0,50) + '"');
+  showTyping();
+  try {
+    const res = await fetch('https://morning-glade-dd57.dkellykennedy.workers.dev/', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: buildSystem(),
+        tools: [{"type":"web_search_20250305","name":"web_search"}],
+        messages: convHistory
+      })
+    });
+    const data = await res.json();
+    removeTyping(); hideSearchStatus();
+    let reply = ''; let usedWebSearch = false;
+    if (data.content) {
+      for (let i = 0; i < data.content.length; i++) {
+        const block = data.content[i];
+        if (block.type === 'text') reply += block.text;
+        if (block.type === 'tool_use' && block.name === 'web_search') {
+          usedWebSearch = true;
+          showSearchStatus(t('searching').replace('...','') + ': "' + (block.input && block.input.query ? block.input.query : 'live data') + '"');
+          logEv('search', 'Searched: "' + (block.input && block.input.query ? block.input.query : 'web') + '"');
+        }
+      }
+    }
+    if (!reply) reply = t('techError');
+    const isAngry = reply.indexOf('##ANGRY##') > -1;
+    const isTroll = reply.indexOf('##TROLL##') > -1;
+    const showCB = reply.indexOf('##CALLBACK##') > -1;
+    reply = reply.replace(/##ANGRY##|##TROLL##|##CALLBACK##/g, '').trim();
+    const bar = document.getElementById('sentBar');
+    if (isAngry) { bar.className='sent-bar angry'; bar.innerHTML=t('distressedBar'); logEv('angry','Distressed: "'+text.slice(0,40)+'"'); setTimeout(()=>{bar.style.display='none';},6000); }
+    else if (isTroll) { bar.className='sent-bar troll'; bar.innerHTML=t('trollBar'); logEv('troll','Filtered: "'+text.slice(0,40)+'"'); setTimeout(()=>{bar.style.display='none';},5000); }
+    else { bar.style.display='none'; }
+    if (showCB) logEv('cb', 'Callback offered');
+    hideSearchStatus();
+    const flag = isAngry ? 'angry' : isTroll ? 'troll' : usedWebSearch ? 'search' : null;
+    convHistory.push({role:'assistant', content:reply});
+    addMsg('alfred', reply, showCB, flag);
+  } catch(e) {
+    removeTyping(); hideSearchStatus();
+    addMsg('alfred', t('apiError'));
+    logEv('info', 'API error');
+  }
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('userInput').focus();
+}
+
+function showWelcome() {
+  document.getElementById('msgs').innerHTML = '';
+  addMsg('alfred', t('welcomeMsg'));
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', function() {
+  // Check browser language
+  const detected = detectBrowserLang();
+  if (detected && detected !== 'en') {
+    // Show banner in detected language first, page stays English until accepted
+    showAutoBanner(detected);
+  }
+  // Apply English by default
+  applyLang('en');
+  // Show welcome message
+  showWelcome();
+  // Fetch live stock quote
+  fetchLiveQuote();
+  setInterval(fetchLiveQuote, 60000);
+});
+</script>
+</body>
+</html>

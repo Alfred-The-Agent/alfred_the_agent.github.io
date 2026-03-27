@@ -127,7 +127,15 @@ nav.scrolled{background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border
 
 .demo-feature-wrap{display:grid;grid-template-columns:2fr 1fr;gap:1px;background:var(--border);margin-top:40px;margin-bottom:20px;}
 .demo-feature-shot{background:var(--white);min-height:420px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.demo-feature-shot img{width:100%;height:100%;object-fit:cover;display:block;}
+.demo-feature-shot img{
+  width:100%;
+  height:auto;
+  max-height:420px;
+  object-fit:contain;
+  display:block;
+  margin:auto;
+  background:#fff;
+}
 .demo-feature-info{background:var(--white);padding:40px 32px;display:flex;flex-direction:column;justify-content:center;}
 .demo-feature-label{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:12px;}
 .demo-feature-info h3{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;color:var(--black);margin-bottom:10px;}

@@ -405,38 +405,14 @@ function playAlfredVideo() {
 }
 
 function dismissAlfred() {
-  const el = document.getElementById('alfredIntro');
-  el.style.animation = 'none';
+  var el = document.getElementById('alfredIntro');
   el.style.transition = 'opacity .3s, transform .3s';
   el.style.opacity = '0';
   el.style.transform = 'translateY(20px)';
-  setTimeout(() => { el.style.display = 'none'; }, 300);
+  setTimeout(function() { el.style.display = 'none'; }, 320);
 }
 
-// Auto-play after 1.5s delay (gives page time to load, respects user attention)
-window.addEventListener('DOMContentLoaded', function() {
-  setTimeout(function() {
-    const video = document.getElementById('alfredVideo');
-    // Try autoplay muted first — if allowed, unmute after
-    video.muted = true;
-    video.play().then(function() {
-      // Autoplay worked — unmute and show as playing
-      video.muted = false;
-      document.getElementById('alfredStill').classList.add('hidden');
-      document.getElementById('alfredPlayBtn').classList.add('playing');
-      document.getElementById('alfredPulse').style.display = 'none';
-      video.onended = function() {
-        document.getElementById('alfredStill').classList.remove('hidden');
-        const btn = document.getElementById('alfredPlayBtn');
-        btn.classList.remove('playing');
-        btn.textContent = '▶ Play Again';
-      };
-    }).catch(function() {
-      // Autoplay blocked — show Meet Alfred button
-      video.muted = false;
-    });
-  }, 1500);
-});
+// Alfred shows as still on load — click Meet Alfred to play
 
 // ─── TRANSLATIONS ───────────────────────────────────────────────────────────
 const T = {

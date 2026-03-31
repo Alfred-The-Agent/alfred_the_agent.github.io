@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alfred — AmpliTech Group Investor Relations</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0a0c10;--ink-soft:#12161f;--gold:#c9a84c;--gold-light:#e0be7a;
+  --gold-pale:rgba(201,168,76,0.08);--gold-border:rgba(201,168,76,0.2);
+  --border:rgba(255,255,255,0.07);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+header{background:var(--ink);padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gold-border);flex-shrink:0;}
+.hdr-left{display:flex;align-items:center;gap:14px;}
+.alfred-av{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--gold);overflow:hidden;flex-shrink:0;background:var(--ink-soft);display:flex;align-items:center;justify-content:center;}
+.alfred-av img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
+.alfred-av .av-fallback{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);display:none;}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;}
+.brand-sub{font-size:9px;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-top:1px;}
+.divv{width:1px;height:26px;background:rgba(255,255,255,0.08);}
+.co-name{font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);}
+.co-tick{font-size:10px;color:var(--gold);letter-spacing:0.1em;margin-top:1px;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.stock-pill{background:rgba(201,168,76,0.1);border:1px solid var(--gold-border);padding:5px 12px;display:flex;align-items:center;gap:8px;}
+.sp-price{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--gold-light);}
+.sp-delta.neg{color:#e07070;}.sp-delta.pos{color:#6db87a;}.sp-delta{font-size:11px;}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:10px;color:#6db87a;letter-spacing:0.08em;}
+.live-badge::before{content:'';width:6px;height:6px;background:#6db87a;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.main{display:grid;grid-template-columns:260px 1fr 300px;flex:1;overflow:hidden;}
+.left{background:#0d1018;border-right:1px solid rgba(255,255,255,0.05);overflow-y:auto;}
+.pblock{padding:16px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.plabel{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:500;}
+.fact{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:11px;}
+.fact:last-child{border:none;}
+.fact label{color:rgba(255,255,255,0.3);}
+.fact span{color:rgba(255,255,255,0.8);font-weight:500;text-align:right;max-width:140px;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.mbox{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:10px;}
+.mbox label{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.25);display:block;margin-bottom:3px;}
+.mbox .mv{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;}
+.mbox .md{font-size:10px;margin-top:2px;}
+.up{color:#6db87a;}.dn{color:#e07070;}
+.pr-zone{border:1px dashed rgba(201,168,76,0.25);padding:12px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:8px;}
+.pr-zone:hover{border-color:var(--gold);background:rgba(201,168,76,0.05);}
+.pr-zone p{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.5;}
+.pr-zone strong{color:var(--gold-light);font-size:12px;}
+#prTextarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);font-family:'DM Sans',sans-serif;font-size:11px;padding:8px;resize:vertical;min-height:80px;outline:none;display:none;margin-top:6px;line-height:1.5;}
+.btn-load{width:100%;background:var(--gold);color:var(--ink);border:none;padding:8px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;display:none;}
+.pr-tag{display:flex;align-items:center;justify-content:space-between;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);padding:5px 8px;font-size:10px;color:var(--gold-light);margin-bottom:4px;}
+.pr-tag button{background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:12px;}
+.fil{display:flex;align-items:center;gap:7px;padding:6px 8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);margin-bottom:4px;cursor:pointer;font-size:11px;}
+.ftag{background:rgba(201,168,76,0.15);color:var(--gold-light);font-size:9px;font-weight:700;padding:2px 5px;min-width:26px;text-align:center;}
+.fil .fn{color:rgba(255,255,255,0.7);}.fil .fd{color:rgba(255,255,255,0.25);font-size:10px;}
+.search-status{display:none;padding:6px 20px;background:rgba(201,168,76,0.06);border-bottom:1px solid rgba(201,168,76,0.1);font-size:11px;color:var(--gold);align-items:center;gap:8px;flex-shrink:0;}
+.search-status.visible{display:flex;}
+.sdot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 1s infinite;flex-shrink:0;}
+.chat{display:flex;flex-direction:column;background:#111318;overflow:hidden;}
+.ctop{padding:11px 20px;background:#0d1018;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.ctop h3{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:rgba(255,255,255,0.8);}
+.online{font-size:10px;color:#6db87a;letter-spacing:0.1em;display:flex;align-items:center;gap:5px;}
+.online::before{content:'';width:6px;height:6px;background:#6db87a;border-radius:50%;animation:pulse 2s infinite;}
+.sent-bar{padding:6px 20px;font-size:11px;font-weight:500;align-items:center;gap:8px;display:none;flex-shrink:0;}
+.sent-bar.angry{display:flex;background:rgba(139,38,53,0.12);border-bottom:1px solid rgba(139,38,53,0.15);color:#d47a85;}
+.sent-bar.troll{display:flex;background:rgba(201,168,76,0.06);border-bottom:1px solid rgba(201,168,76,0.12);color:var(--gold);}
+.msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth;}
+.msg{display:flex;gap:10px;animation:msgIn .3s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse;}
+.av{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;overflow:hidden;}
+.av.alfred{border:1.5px solid rgba(201,168,76,0.35);background:var(--ink-soft);font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);}
+.av.alfred img{width:100%;height:100%;object-fit:cover;object-position:top;}
+.av.user{background:#1a3a5c;color:#fff;font-size:10px;}
+.bub{max-width:75%;padding:11px 15px;font-size:13px;line-height:1.65;border-radius:2px;}
+.msg.alfred .bub{background:#1a1e27;border:1px solid rgba(255,255,255,0.06);border-left:2px solid var(--gold);color:rgba(255,255,255,0.82);}
+.msg.user .bub{background:#1a3a5c;border:1px solid #2a5a8c;color:rgba(255,255,255,0.9);}
+.bub strong{color:#fff;font-weight:500;}
+.src-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.sc{font-size:9px;padding:2px 7px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);letter-spacing:.06em;font-weight:500;}
+.sc.web{background:rgba(100,160,255,0.1);border-color:rgba(100,160,255,0.2);color:#7aabe0;}
+.flag{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;margin-bottom:6px;font-weight:600;letter-spacing:.08em;border-radius:2px;}
+.flag.angry{background:rgba(139,38,53,0.15);color:#d47a85;border:1px solid rgba(139,38,53,0.2);}
+.flag.troll{background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid rgba(201,168,76,0.2);}
+.flag.verified{background:rgba(26,92,56,0.15);color:#6db87a;border:1px solid rgba(26,92,56,0.2);}
+.flag.pr{background:rgba(15,45,94,0.3);color:#7aabe0;border:1px solid rgba(15,45,94,0.4);}
+.flag.search{background:rgba(100,160,255,0.1);color:#7aabe0;border:1px solid rgba(100,160,255,0.2);}
+.cb-card{margin-top:12px;background:rgba(15,45,94,0.2);border:1px solid rgba(15,45,94,0.4);border-left:2px solid #2a5a8c;padding:13px;}
+.cb-card h4{font-family:'Cormorant Garamond',serif;font-size:15px;color:#a8c4e8;margin-bottom:4px;}
+.cb-card p{font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:11px;}
+.cb-card button{background:#1a3a5c;color:#fff;border:1px solid #2a5a8c;padding:9px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;width:100%;transition:background .2s;}
+.typing{display:flex;align-items:center;gap:5px;padding:10px 13px;background:#1a1e27;border:1px solid rgba(255,255,255,0.06);border-left:2px solid var(--gold);width:fit-content;}
+.typing span{width:5px;height:5px;background:var(--gold);border-radius:50%;animation:typing 1.2s infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.input-area{padding:13px 18px;background:#0d1018;border-top:1px solid rgba(255,255,255,0.05);flex-shrink:0;}
+.suggs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.sugg{font-size:11px;padding:4px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);cursor:pointer;transition:all .2s;}
+.sugg:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.25);color:var(--gold-light);}
+.sugg.red{border-color:rgba(139,38,53,0.25);color:rgba(212,122,133,0.6);}
+.sugg.blue{border-color:rgba(100,160,255,0.2);color:rgba(122,171,224,0.7);}
+.sugg.blue:hover{background:rgba(100,160,255,0.08);color:#7aabe0;}
+.irow{display:flex;gap:8px;}
+.irow input{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 13px;outline:none;transition:border-color .2s;}
+.irow input:focus{border-color:rgba(201,168,76,0.35);}
+.irow input::placeholder{color:rgba(255,255,255,0.22);}
+.send{background:var(--gold);color:var(--ink);border:none;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;white-space:nowrap;}
+.send:hover{background:var(--gold-light);}
+.send:disabled{opacity:.4;cursor:default;}
+.right{background:#0d1018;border-left:1px solid rgba(255,255,255,0.05);overflow-y:auto;display:flex;flex-direction:column;}
+.cal-item{display:flex;gap:9px;padding:8px 10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-left:2px solid #2a5a8c;margin-bottom:4px;}
+.cal-item.earn{border-left-color:var(--gold);}
+.cdate .day{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;line-height:1;}
+.cdate .mo{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.25);}
+.cev{font-size:11px;font-weight:500;color:rgba(255,255,255,0.75);}
+.cdet{font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;}
+.an-row{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);margin-bottom:3px;font-size:11px;}
+.an-row .firm{color:rgba(255,255,255,0.7);font-weight:500;}
+.an-row .pt{color:rgba(255,255,255,0.25);font-size:10px;}
+.rating{font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 6px;}
+.rating.buy{background:rgba(26,92,56,0.2);color:#6db87a;}
+.rating.hold{background:rgba(201,168,76,0.12);color:var(--gold);}
+.rating.ship{background:rgba(100,160,255,0.12);color:#7aabe0;}
+.act-item{font-size:11px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);color:rgba(255,255,255,0.4);}
+.disc{padding:12px 14px;font-size:10px;color:rgba(255,255,255,0.18);line-height:1.6;border-top:1px solid rgba(255,255,255,0.04);margin-top:auto;}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-ov.open{display:flex;}
+.modal{background:#13171f;border:1px solid rgba(201,168,76,0.22);max-width:420px;width:90%;padding:28px;animation:msgIn .25s ease;}
+.modal-ey{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.modal h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;margin-bottom:5px;font-weight:500;}
+.modal > p{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:18px;line-height:1.6;}
+.mf{display:flex;flex-direction:column;gap:9px;}
+.mf label{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:4px;}
+.mf input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);padding:9px 12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.mf input:focus{border-color:rgba(201,168,76,0.45);}
+.mf input.err{border-color:#8b2635;}
+.merr{font-size:10px;color:#d47a85;margin-top:2px;display:none;}
+.macts{display:flex;gap:8px;margin-top:5px;}
+.btn-verify{flex:1;background:var(--gold);color:var(--ink);border:none;padding:11px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
+.btn-cancel{background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;}
+.mnote{font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:7px;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);}
+.alfred-intro{position:fixed;bottom:24px;right:24px;z-index:888;display:flex;flex-direction:column;align-items:center;animation:introSlide .6s ease forwards;opacity:0;}
+.alfred-video-wrap{position:relative;width:160px;height:260px;filter:drop-shadow(0 8px 32px rgba(0,0,0,0.7));}
+.alfred-video-wrap video{width:100%;height:100%;object-fit:contain;object-position:bottom;display:none;}
+.alfred-still{width:100%;height:100%;object-fit:contain;object-position:bottom;display:block;}
+.alfred-play-btn{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(201,168,76,0.15);border:1px solid var(--gold-border);color:var(--gold-light);font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:5px 12px;cursor:pointer;transition:all .2s;white-space:nowrap;backdrop-filter:blur(4px);}
+.alfred-play-btn:hover{background:rgba(201,168,76,0.25);border-color:var(--gold);}
+.alfred-dismiss{position:absolute;top:-8px;right:-8px;width:20px;height:20px;background:#13171f;border:1px solid var(--gold-border);border-radius:50%;color:rgba(255,255,255,0.4);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.alfred-dismiss:hover{color:#fff;border-color:var(--gold);}
+.alfred-pulse{position:absolute;top:-4px;right:-4px;width:10px;height:10px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes introSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-left">
+    <div class="alfred-av" id="alfredAv">
+      <img src="alfred-portrait.png" alt="Alfred" id="alfredImg" onerror="handleImgError()">
+      <span class="av-fallback" id="avFallback">A</span>
+    </div>
+    <div><div class="brand-name">Alfred</div><div class="brand-sub">Investor Relations Agent</div></div>
+    <div class="divv"></div>
+    <div><div class="co-name">AmpliTech Group, Inc.</div><div class="co-tick">NASDAQ: AMPG · 5G / O-RAN · RF &amp; Microwave · Satcom · Defense</div></div>
+  </div>
+  <div class="hdr-right">
+    <div class="stock-pill"><span class="sp-price" id="spPrice">—</span><span class="sp-delta" id="spDelta"></span></div>
+    <div class="live-badge">Live · Web Search Active</div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="left">
+    <div class="pblock">
+      <div class="plabel">Company Snapshot</div>
+      <div class="fact"><label>Founded</label><span>2002</span></div>
+      <div class="fact"><label>CEO / CTO</label><span>Fawad A. Maqbool</span></div>
+      <div class="fact"><label>COO</label><span>Jorge Flores</span></div>
+      <div class="fact"><label>HQ</label><span>Hauppauge, NY</span></div>
+      <div class="fact"><label>Employees</label><span>~34</span></div>
+      <div class="fact"><label>Exchange</label><span>NASDAQ: AMPG / AMPGW</span></div>
+      <div class="fact"><label>IR Contact</label><span>PCG Advisory · Kirin Smith</span></div>
+      <div class="fact"><label>IR Email</label><span style="font-size:10px;">investors@amplitechgroup.com</span></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel">Key Financials</div>
+      <div class="mgrid">
+        <div class="mbox"><label>FY2025 Revenue</label><div class="mv">$25.2M</div><div class="md up">▲ +165% YoY</div></div>
+        <div class="mbox"><label>FY2026 Guidance</label><div class="mv">$50M+</div><div class="md up">▲ Reaffirmed</div></div>
+        <div class="mbox"><label>Gross Profit</label><div class="mv">$6.0M</div><div class="md">23.9% margin</div></div>
+        <div class="mbox"><label>LOI Pipeline</label><div class="mv">$140M+</div><div class="md up">▲ Active</div></div>
+      </div>
+    </div>
+    <div class="pblock">
+      <div class="plabel">Load Press Release</div>
+      <div class="pr-zone" id="prZone" onclick="togglePR()"><strong>+ Add Press Release</strong><p>Alfred answers investor questions directly from it</p></div>
+      <textarea id="prTextarea" placeholder="Paste press release text here..."></textarea>
+      <button class="btn-load" id="btnLoadPR" onclick="loadPR()">Load into Alfred →</button>
+      <div id="prList"></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel">SEC Filings</div>
+      <div class="fil"><span class="ftag">10-K</span><div><div class="fn">Annual Report FY2025</div><div class="fd">Mar 26, 2026</div></div></div>
+      <div class="fil"><span class="ftag">8-K</span><div><div class="fn">FY2025 Results — 165% Growth</div><div class="fd">Mar 26, 2026</div></div></div>
+      <div class="fil"><span class="ftag">8-K</span><div><div class="fn">Pipeline Update &amp; FY2026 Guidance</div><div class="fd">Mar 27, 2026</div></div></div>
+      <div class="fil"><span class="ftag">8-K</span><div><div class="fn">O-RAN Conformance Certification</div><div class="fd">Jan 20, 2026</div></div></div>
+      <div class="fil"><span class="ftag">S-3</span><div><div class="fn">Shelf Registration Statement</div><div class="fd">Aug 4, 2025</div></div></div>
+    </div>
+  </div>
+
+  <div class="chat">
+    <div class="ctop"><h3>Alfred — AmpliTech Group IR Concierge</h3><div class="online">Online · Web Search Active</div></div>
+    <div class="search-status" id="searchStatus"><div class="sdot"></div><span id="searchMsg">Alfred is searching the web...</span></div>
+    <div class="sent-bar" id="sentBar"></div>
+    <div class="msgs" id="msgs"></div>
+    <div class="input-area">
+      <div class="suggs">
+        <button class="sugg" onclick="ask(this.dataset.q)" data-q="What does AmpliTech do?">What does AmpliTech do?</button>
+        <button class="sugg" onclick="ask(this.dataset.q)" data-q="Tell me about the 5G O-RAN strategy">Tell me about the 5G O-RAN strategy</button>
+        <button class="sugg" onclick="ask(this.dataset.q)" data-q="What drove the 165% revenue growth in FY2025?">What drove 165% revenue growth?</button>
+        <button class="sugg blue" onclick="ask(this.dataset.q)" data-q="Any recent AMPG news?">Any recent AMPG news?</button>
+        <button class="sugg blue" onclick="ask(this.dataset.q)" data-q="Latest AMPG stock news?">Latest AMPG stock news?</button>
+        <button class="sugg" onclick="ask(this.dataset.q)" data-q="How credible is the $50M FY2026 guidance?">How credible is the $50M guidance?</button>
+        <button class="sugg red" onclick="ask(this.dataset.q)" data-q="Your stock is a disaster, I lost everything!">Your stock is a disaster, I lost everything!</button>
+      </div>
+      <div class="irow">
+        <input type="text" id="userInput" placeholder="Ask Alfred any investor question about AmpliTech Group…" onkeydown="if(event.key==='Enter')send()">
+        <button class="send" id="sendBtn" onclick="send()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+          Ask Alfred
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="pblock">
+      <div class="plabel">IR Calendar</div>
+      <div class="cal-item earn"><div class="cdate"><div class="day">9</div><div class="mo">Apr</div></div><div><div class="cev">FY2025 Earnings Call</div><div class="cdet">Full results &amp; pipeline detail</div></div></div>
+      <div class="cal-item"><div class="cdate"><div class="day">Q1</div><div class="mo">2026</div></div><div><div class="cev">$40M LOI Shipment Ramp</div><div class="cdet">North American mobile operator</div></div></div>
+      <div class="cal-item"><div class="cdate"><div class="day">Q2</div><div class="mo">2026</div></div><div><div class="cev">O-RAN Scale Deployments</div><div class="cdet">64T64R Massive MIMO rollouts</div></div></div>
+      <div class="cal-item earn"><div class="cdate"><div class="day">FY</div><div class="mo">2026</div></div><div><div class="cev">$50M+ Revenue Target</div><div class="cdet">Guidance reaffirmed Mar 27, 2026</div></div></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel">LOI Pipeline</div>
+      <div class="an-row"><div><div class="firm">$40M LOI — N. American Mobile</div><div class="pt">$20M+ shipped · Resuming Q1 2026</div></div><span class="rating buy">ACTIVE</span></div>
+      <div class="an-row"><div><div class="firm">$78–100M LOI — Global Telecom</div><div class="pt">$5M funded POs · Shipping Dec 2025</div></div><span class="rating ship">SHIP</span></div>
+      <div class="an-row"><div><div class="firm">Multi-phase frameworks</div><div class="pt">Additional global programs</div></div><span class="rating hold">PENDING</span></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel">Operating Divisions</div>
+      <div class="an-row"><div><div class="firm">AmpliTech Inc.</div><div class="pt">Core LNA / LNB / RF products</div></div></div>
+      <div class="an-row"><div><div class="firm">5G O-RAN Division</div><div class="pt">Massive MIMO · 5G/6G systems</div></div></div>
+      <div class="an-row"><div><div class="firm">Specialty Microwave</div><div class="pt">Defense · Space · Quantum computing</div></div></div>
+      <div class="an-row"><div><div class="firm">Spectrum Semiconductor</div><div class="pt">IC packaging · Global distribution</div></div></div>
+      <div class="an-row"><div><div class="firm">Microwave Design Center</div><div class="pt">Custom engineering &amp; R&amp;D</div></div></div>
+    </div>
+    <div class="pblock">
+      <div class="plabel">Activity Feed</div>
+      <div id="actFeed"><div style="font-size:11px;color:rgba(255,255,255,0.2);text-align:center;padding:8px;">No activity yet</div></div>
+    </div>
+    <div class="disc">Alfred provides publicly available information only. Not investment advice. Always review official SEC filings at sec.gov. AmpliTech IR: investors@amplitechgroup.com · (631) 521-7831</div>
+  </div>
+</div>
+
+<div class="modal-ov" id="verifyModal">
+  <div class="modal">
+    <div class="modal-ey">Identity Verification Required</div>
+    <h3>Schedule IR Callback</h3>
+    <p>To connect with AmpliTech Group's Investor Relations team, we need to verify your identity.</p>
+    <div class="mf">
+      <div><label>Full Name *</label><input type="text" id="v-name"><div class="merr" id="err-name">Please enter your name</div></div>
+      <div><label>Professional Email *</label><input type="email" id="v-email"><div class="merr" id="err-email">Please enter a valid email</div></div>
+      <div><label>Institution / Fund *</label><input type="text" id="v-inst"><div class="merr" id="err-inst">Please enter your institution</div></div>
+      <div><label>Phone (optional)</label><input type="tel" id="v-phone" placeholder="For faster callback"></div>
+      <div><label>Preferred Time</label><input type="text" id="v-time" placeholder="e.g. Tuesday 2-4pm ET"></div>
+      <div class="macts">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-verify" onclick="submitVerify()">Verify &amp; Request Callback</button>
+      </div>
+      <div class="mnote">Your information is used solely to facilitate this IR conversation.</div>
+    </div>
+  </div>
+</div>
+
+<div class="alfred-intro" id="alfredIntro">
+  <div class="alfred-video-wrap">
+    <video id="alfredVideo" playsinline preload="auto">
+      <source src="https://res.cloudinary.com/ddupcmoil/video/upload/Avatar_Video_1_sxnxms.mp4" type="video/mp4">
+    </video>
+    <img class="alfred-still" id="alfredStill" src="Screenshot_2026-03-15_at_5.24.41_PM-removebg-preview.png" alt="Alfred">
+    <div class="alfred-pulse"></div>
+    <button class="alfred-play-btn" id="alfredPlayBtn" onclick="playAlfredVideo()">▶ Meet Alfred</button>
+    <button class="alfred-dismiss" onclick="dismissAlfred()">✕</button>
+  </div>
+</div>
+
+<script>
+const ALFRED_SRC = 'alfred-portrait.png';
+const convHistory = [];
+let pressReleases = [];
+let isLoading = false;
+let logCount = 0;
+
+async function fetchLiveQuote() {
+  try {
+    const res = await fetch('https://morning-glade-dd57.dkellykennedy.workers.dev/quote?ticker=AMPG');
+    const data = await res.json();
+    const meta = data.chart.result[0].meta;
+    const price = meta.regularMarketPrice;
+    const prev = meta.chartPreviousClose || meta.previousClose;
+    const change = price - prev;
+    const pct = (change / prev * 100);
+    const up = change >= 0;
+    document.getElementById('spPrice').textContent = '$' + price.toFixed(2);
+    const d = document.getElementById('spDelta');
+    d.textContent = (up?'▲ +':'▼ ') + Math.abs(change).toFixed(2) + ' (' + (up?'+':'') + pct.toFixed(2) + '%)';
+    d.className = 'sp-delta ' + (up?'pos':'neg');
+  } catch(e) {
+    document.getElementById('spPrice').textContent = 'AMPG';
+    document.getElementById('spDelta').textContent = 'quote unavailable';
+  }
+}
+
+function playAlfredVideo() {
+  var v = document.getElementById('alfredVideo');
+  var s = document.getElementById('alfredStill');
+  var b = document.getElementById('alfredPlayBtn');
+  s.style.display = 'none'; b.style.display = 'none';
+  v.style.display = 'block'; v.play();
+  v.onended = function() { v.style.display='none'; s.style.display='block'; b.style.display='block'; b.textContent='▶ Play Again'; };
+}
+
+function dismissAlfred() {
+  var el = document.getElementById('alfredIntro');
+  el.style.transition='opacity .3s,transform .3s'; el.style.opacity='0'; el.style.transform='translateY(20px)';
+  setTimeout(function(){el.style.display='none';},320);
+}
+
+function handleImgError() {
+  document.getElementById('alfredImg').style.display='none';
+  document.getElementById('avFallback').style.display='block';
+}
+
+function buildSystem() {
+  const pr = pressReleases.length > 0
+    ? '\n\nLOADED PRESS RELEASES:\n' + pressReleases.map((p,i)=>'[PR '+(i+1)+']: '+p.text).join('\n\n---\n\n') : '';
+  return 'You are Alfred, AmpliTech Group\'s distinguished Investor Relations AI agent. You speak with precision, warmth, and the discretion of a seasoned IR professional. Occasionally use "sir" or appropriate honorifics.\n\nYou have ACCESS TO WEB SEARCH via the web_search tool. Use it proactively for current AMPG news, stock developments, and any question requiring up-to-date information.\n\nAMPLITECH GROUP (NASDAQ: AMPG) — CORE DATA:\n- Business: Designer, developer, manufacturer of advanced RF/microwave signal-processing components and 5G/O-RAN systems\n- Markets: Satellite communications, 5G/6G telecom, defense, space, quantum computing\n- HQ: Hauppauge, NY · Founded 2002 · ~34 employees\n- CEO/Founder/CTO/Chairman/Treasurer: Fawad A. Maqbool · COO: Jorge Flores\n- IR: PCG Advisory — Kirin Smith · investors@amplitechgroup.com · (631) 521-7831\n- Five Divisions: AmpliTech Inc. (core LNA/LNB/RF), Specialty Microwave (defense/space/quantum), Spectrum Semiconductor Materials (IC packaging/distribution), Microwave Design Center (custom R&D), 5G O-RAN Division (Massive MIMO/5G-6G)\n- FY2025 Revenue: $25.2M (+165% YoY from $9.5M FY2024) · Gross Profit: $6.0M · Gross Margin: 23.9%\n- Q3 2025: $6.09M revenue · 48.6% gross margin · +115% YoY\n- FY2026 Guidance: $50M+ revenue (reaffirmed Mar 27, 2026) · ~100% YoY growth\n- Balance Sheet Q3 2025: ~$12M cash & receivables · zero long-term debt · $14M working capital\n- $40M LOI (N. American mobile operator): $20M+ shipped · resuming Q1 2026\n- $78–100M LOI (global telecom): $5M funded POs · production shipments began Dec 2025\n- 64T64R Massive MIMO: O-RAN Alliance conformance certification Jan 20, 2026 (Badge: NANU26001)\n- Northeastern University: First open-source Massive MIMO O-RAN demo Feb 25, 2026\n- FY2025 Earnings Call: April 9, 2026\n- Revenue drivers: LNA/LNB demand · 5G O-RAN commercial execution · Spectrum Asian market rebound' + pr + '\n\nRULES:\n- ANGRY/DISTRESSED: Empathy first, offer callback, end: ##ANGRY##\n- TROLL/NONSENSE: Polite redirect, no callback, end: ##TROLL##\n- WEB SEARCH: Use proactively for current news. Tag [Source: Live Web Search]\n- CALLBACK triggers (M&A, multi-year guidance detail, roadshows): end ##CALLBACK##\n- Cite sources. 3-5 sentences unless detail required. Never fabricate.\n- Tone: Warm, precise, slightly formal.';
+}
+
+function logEv(type, detail) {
+  logCount++;
+  const feed = document.getElementById('actFeed');
+  if (logCount === 1) feed.innerHTML = '';
+  const item = document.createElement('div');
+  item.className = 'act-item';
+  const colors = {angry:'#d47a85',troll:'#c9a84c',cb:'#6db87a',search:'#7aabe0',pr:'#7aabe0',info:'rgba(255,255,255,0.25)'};
+  const labels = {angry:'ANGRY',troll:'TROLL',cb:'CB',search:'SEARCH',pr:'PR',info:'INFO'};
+  item.innerHTML = '<span style="color:'+(colors[type]||colors.info)+';font-size:9px;letter-spacing:.08em;">[' + (labels[type]||type.toUpperCase()) + ']</span> ' + detail.slice(0,42);
+  feed.insertBefore(item, feed.firstChild);
+}
+
+function togglePR() {
+  const ta = document.getElementById('prTextarea'), btn = document.getElementById('btnLoadPR');
+  const v = ta.style.display==='block';
+  ta.style.display = v?'none':'block'; btn.style.display = v?'none':'block';
+  if (!v) ta.focus();
+}
+
+function loadPR() {
+  const ta = document.getElementById('prTextarea');
+  const text = ta.value.trim(); if (!text) return;
+  const title = text.slice(0,55).replace(/\n/g,' ') + (text.length>55?'…':'');
+  pressReleases.push({title,text});
+  const list = document.getElementById('prList'), idx = pressReleases.length-1;
+  const tag = document.createElement('div'); tag.className='pr-tag';
+  tag.innerHTML='<span>📄 '+title+'</span><button onclick="removePR('+idx+')">✕</button>';
+  list.appendChild(tag);
+  ta.value=''; ta.style.display='none'; document.getElementById('btnLoadPR').style.display='none';
+  logEv('pr','Loaded: "'+title+'"');
+  addMsg('alfred','I have loaded that press release into my briefing, sir. Ready to answer investor questions about it. [Source: Press Release — Loaded]',false,'pr');
+}
+
+function removePR(idx) {
+  pressReleases.splice(idx,1);
+  document.getElementById('prList').innerHTML='';
+  pressReleases.forEach(function(pr,i){
+    const tag=document.createElement('div'); tag.className='pr-tag';
+    tag.innerHTML='<span>📄 '+pr.title+'</span><button onclick="removePR('+i+')">✕</button>';
+    document.getElementById('prList').appendChild(tag);
+  });
+}
+
+function openModal() { document.getElementById('verifyModal').classList.add('open'); setTimeout(()=>{document.getElementById('v-name').focus();},100); }
+function closeModal() { document.getElementById('verifyModal').classList.remove('open'); }
+
+function submitVerify() {
+  const name=document.getElementById('v-name').value.trim();
+  const email=document.getElementById('v-email').value.trim();
+  const inst=document.getElementById('v-inst').value.trim();
+  let ok=true;
+  if(!name){document.getElementById('v-name').classList.add('err');document.getElementById('err-name').style.display='block';ok=false;}
+  else{document.getElementById('v-name').classList.remove('err');document.getElementById('err-name').style.display='none';}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('v-email').classList.add('err');document.getElementById('err-email').style.display='block';ok=false;}
+  else{document.getElementById('v-email').classList.remove('err');document.getElementById('err-email').style.display='none';}
+  if(!inst){document.getElementById('v-inst').classList.add('err');document.getElementById('err-inst').style.display='block';ok=false;}
+  else{document.getElementById('v-inst').classList.remove('err');document.getElementById('err-inst').style.display='none';}
+  if(!ok) return;
+  closeModal();
+  logEv('cb','Verified: '+name+' · '+inst);
+  addMsg('alfred','Very good, '+name+'. Your callback request has been submitted. A member of AmpliTech Group\'s Investor Relations team will be in touch at '+email+' within one business day.\n\nIs there anything else I can assist you with in the meantime? [Source: IR Team Scheduling]',false,'verified');
+}
+
+function addMsg(role, content, showCB, flagType) {
+  showCB=showCB||false; flagType=flagType||null;
+  const c=document.getElementById('msgs');
+  const d=document.createElement('div'); d.className='msg '+role;
+  const av=document.createElement('div'); av.className='av '+role;
+  if(role==='alfred'){
+    const img=document.getElementById('alfredImg');
+    av.innerHTML=(img&&img.complete&&img.naturalWidth>0)?'<img src="'+ALFRED_SRC+'" alt="Alfred">':'A';
+  } else { av.textContent='YOU'; }
+  const bub=document.createElement('div'); bub.className='bub';
+  let html='';
+  if(flagType==='angry') html+='<div class="flag angry">⚠ Distressed Investor</div><br>';
+  else if(flagType==='troll') html+='<div class="flag troll">◈ Input Filtered</div><br>';
+  else if(flagType==='verified') html+='<div class="flag verified">✓ Identity Verified</div><br>';
+  else if(flagType==='pr') html+='<div class="flag pr">📄 Press Release Loaded</div><br>';
+  else if(flagType==='search') html+='<div class="flag search">🌐 Live Web Search Used</div><br>';
+  html+=content.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  const srcMatch=html.match(/\[Source:(.*?)\]/i);
+  if(srcMatch){
+    html=html.replace(/\[Source:(.*?)\]/gi,'');
+    const chips=srcMatch[1].split(',').map(s=>{
+      const isWeb=s.toLowerCase().indexOf('web')>-1||s.toLowerCase().indexOf('search')>-1;
+      return '<span class="sc'+(isWeb?' web':'')+'">'+s.trim()+'</span>';
+    }).join('');
+    html+='<div class="src-chips">'+chips+'</div>';
+  }
+  if(showCB) html+='<div class="cb-card"><h4>Schedule an IR Conversation</h4><p>Connect directly with AmpliTech Group\'s Investor Relations team.</p><button onclick="openModal()">Verify Identity &amp; Request Callback →</button></div>';
+  bub.innerHTML=html;
+  d.appendChild(av); d.appendChild(bub); c.appendChild(d);
+  c.scrollTop=c.scrollHeight;
+}
+
+function showTyping(){
+  const c=document.getElementById('msgs');
+  const d=document.createElement('div'); d.className='msg alfred'; d.id='typing';
+  const av=document.createElement('div'); av.className='av alfred';
+  const img=document.getElementById('alfredImg');
+  av.innerHTML=(img&&img.complete&&img.naturalWidth>0)?'<img src="'+ALFRED_SRC+'" alt="Alfred">':'A';
+  const ti=document.createElement('div'); ti.className='typing';
+  ti.innerHTML='<span></span><span></span><span></span>';
+  d.appendChild(av); d.appendChild(ti); c.appendChild(d); c.scrollTop=c.scrollHeight;
+}
+function removeTyping(){const t=document.getElementById('typing');if(t)t.remove();}
+function showSearchStatus(msg){document.getElementById('searchMsg').textContent=msg;document.getElementById('searchStatus').classList.add('visible');}
+function hideSearchStatus(){document.getElementById('searchStatus').classList.remove('visible');}
+
+function ask(q){document.getElementById('userInput').value=q;send();}
+
+async function send(){
+  const input=document.getElementById('userInput');
+  const text=input.value.trim();
+  if(!text||isLoading) return;
+  input.value=''; isLoading=true;
+  document.getElementById('sendBtn').disabled=true;
+  addMsg('user',text);
+  convHistory.push({role:'user',content:text});
+  logEv('info','Q: "'+text.slice(0,50)+'"');
+  showTyping();
+  try{
+    const res=await fetch('https://morning-glade-dd57.dkellykennedy.workers.dev/',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:buildSystem(),
+        tools:[{"type":"web_search_20250305","name":"web_search"}],
+        messages:convHistory
+      })
+    });
+    const data=await res.json();
+    removeTyping(); hideSearchStatus();
+    let reply=''; let usedWebSearch=false;
+    if(data.content){
+      for(let i=0;i<data.content.length;i++){
+        const block=data.content[i];
+        if(block.type==='text') reply+=block.text;
+        if(block.type==='tool_use'&&block.name==='web_search'){
+          usedWebSearch=true;
+          showSearchStatus('Alfred is searching: "'+(block.input&&block.input.query?block.input.query:'live data')+'"');
+          logEv('search','Searched: "'+(block.input&&block.input.query?block.input.query:'web')+'"');
+        }
+      }
+    }
+    if(!reply) reply='My apologies — I encountered a technical difficulty. Please try again or contact investors@amplitechgroup.com.';
+    const isAngry=reply.indexOf('##ANGRY##')>-1;
+    const isTroll=reply.indexOf('##TROLL##')>-1;
+    const showCB=reply.indexOf('##CALLBACK##')>-1;
+    reply=reply.replace(/##ANGRY##|##TROLL##|##CALLBACK##/g,'').trim();
+    const bar=document.getElementById('sentBar');
+    if(isAngry){bar.className='sent-bar angry';bar.innerHTML='⚠ Distressed investor detected — empathy mode active.';logEv('angry','Distressed: "'+text.slice(0,40)+'"');setTimeout(()=>{bar.style.display='none';},6000);}
+    else if(isTroll){bar.className='sent-bar troll';bar.innerHTML='◈ Low-quality input filtered.';logEv('troll','Filtered: "'+text.slice(0,40)+'"');setTimeout(()=>{bar.style.display='none';},5000);}
+    else{bar.style.display='none';}
+    if(showCB) logEv('cb','Callback offered');
+    hideSearchStatus();
+    const flag=isAngry?'angry':isTroll?'troll':usedWebSearch?'search':null;
+    convHistory.push({role:'assistant',content:reply});
+    addMsg('alfred',reply,showCB,flag);
+  }catch(e){
+    removeTyping(); hideSearchStatus();
+    addMsg('alfred','My apologies, sir — I am having difficulty connecting. Please try again or reach us at investors@amplitechgroup.com.');
+    logEv('info','API error');
+  }
+  isLoading=false;
+  document.getElementById('sendBtn').disabled=false;
+  document.getElementById('userInput').focus();
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  addMsg('alfred','Good day, and welcome to **AmpliTech Group Investor Relations**.\n\nI\'m Alfred, your dedicated IR agent for AmpliTech Group (NASDAQ: AMPG). I\'m fully briefed on AmpliTech\'s 5G O-RAN strategy, FY2025 financials — including **165% revenue growth** to $25.2M — the $140M+ LOI pipeline, and the $50M+ FY2026 guidance reaffirmed just days ago. I have access to live web search for current news and market developments.\n\nHow may I assist you today? [Source: AmpliTech IR · Alfred Agent · Live Search Active]');
+  fetchLiveQuote();
+  setInterval(fetchLiveQuote,60000);
+});
+</script>
+</body>
+</html>
